@@ -1,0 +1,473 @@
+/* Stl Addons — admin dashboard. Stallioni palette. */
+
+.stl-admin {
+	--stl-orange: #f26522;
+	--stl-orange-hover: #e25612;
+	--stl-orange-soft: #fff3eb;
+	--stl-navy: #1a233d;
+	--stl-text: #334155;
+	--stl-muted: #64748b;
+	--stl-bg: #f5f7fa;
+	--stl-surface: #ffffff;
+	--stl-border: #e2e8f0;
+	--stl-border-strong: #cbd5e1;
+	--stl-success: #16a34a;
+
+	margin: 20px 20px 40px 0;
+	color: var(--stl-text);
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+/* Hide the default WP h1 wrap that admin pages auto-render */
+.stl-admin h1,
+.stl-admin h2,
+.stl-admin h3 {
+	color: var(--stl-navy);
+	margin: 0;
+}
+
+/* ---------- Header ---------- */
+
+.stl-admin-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: var(--stl-surface);
+	border: 1px solid var(--stl-border);
+	border-radius: 12px;
+	padding: 22px 26px;
+	margin-bottom: 18px;
+	box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+}
+
+.stl-admin-brand {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.stl-admin-logo {
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, var(--stl-orange) 0%, #ff8b1a 100%);
+	color: #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+	font-size: 14px;
+	box-shadow: 0 8px 18px -8px rgba(242, 101, 34, 0.55);
+}
+
+.stl-admin-brand h1 {
+	font-size: 20px;
+	font-weight: 700;
+	margin: 0 0 2px 0;
+}
+
+.stl-admin-tagline {
+	margin: 0;
+	color: var(--stl-muted);
+	font-size: 13px;
+}
+
+.stl-admin-meta {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.stl-admin-version {
+	background: var(--stl-orange-soft);
+	color: var(--stl-orange);
+	font-weight: 600;
+	font-size: 12px;
+	padding: 5px 10px;
+	border-radius: 999px;
+}
+
+.stl-admin-link {
+	color: var(--stl-navy);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.stl-admin-link:hover {
+	color: var(--stl-orange);
+}
+
+/* ---------- Tabs ---------- */
+
+.stl-admin-tabs {
+	display: flex;
+	gap: 4px;
+	background: var(--stl-surface);
+	padding: 6px;
+	border: 1px solid var(--stl-border);
+	border-radius: 10px;
+	margin-bottom: 18px;
+	width: fit-content;
+}
+
+.stl-admin-tab {
+	padding: 8px 16px;
+	border-radius: 7px;
+	color: var(--stl-muted);
+	font-weight: 600;
+	font-size: 13px;
+	text-decoration: none;
+	transition: background .15s ease, color .15s ease;
+}
+
+.stl-admin-tab:hover {
+	color: var(--stl-navy);
+	background: var(--stl-bg);
+}
+
+.stl-admin-tab.is-active {
+	background: var(--stl-navy);
+	color: #fff;
+}
+
+.stl-admin-tab.is-active:hover {
+	background: var(--stl-navy);
+	color: #fff;
+}
+
+/* ---------- Layout ---------- */
+
+.stl-admin-grid {
+	display: grid;
+	grid-template-columns: 1fr 320px;
+	gap: 18px;
+	align-items: start;
+}
+
+.stl-admin-main,
+.stl-admin-side {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+@media (max-width: 1100px) {
+	.stl-admin-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ---------- Card ---------- */
+
+.stl-card {
+	background: var(--stl-surface);
+	border: 1px solid var(--stl-border);
+	border-radius: 12px;
+	padding: 22px 24px;
+	box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+}
+
+.stl-card-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 16px;
+	flex-wrap: wrap;
+}
+
+.stl-card-head h3 {
+	font-size: 16px;
+}
+
+.stl-card-sub {
+	margin: 4px 0 0 0;
+	color: var(--stl-muted);
+	font-size: 13px;
+	flex-basis: 100%;
+}
+
+.stl-card-welcome h2 {
+	font-size: 22px;
+	margin-bottom: 8px;
+}
+
+.stl-card-welcome p {
+	color: var(--stl-muted);
+	margin: 0 0 18px 0;
+	max-width: 56ch;
+}
+
+.stl-pill {
+	background: var(--stl-orange-soft);
+	color: var(--stl-orange);
+	font-size: 12px;
+	font-weight: 600;
+	padding: 4px 10px;
+	border-radius: 999px;
+}
+
+/* ---------- Buttons ---------- */
+
+.stl-admin-cta-row {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.stl-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 9px 18px;
+	border-radius: 8px;
+	font-weight: 600;
+	font-size: 13.5px;
+	text-decoration: none;
+	border: 1px solid transparent;
+	transition: background .15s ease, color .15s ease, border-color .15s ease;
+	cursor: pointer;
+}
+
+.stl-btn-primary {
+	background: var(--stl-orange);
+	color: #fff;
+}
+
+.stl-btn-primary:hover {
+	background: var(--stl-orange-hover);
+	color: #fff;
+}
+
+.stl-btn-ghost {
+	background: transparent;
+	color: var(--stl-navy);
+	border-color: var(--stl-border-strong);
+}
+
+.stl-btn-ghost:hover {
+	background: var(--stl-bg);
+	color: var(--stl-navy);
+	border-color: var(--stl-border-strong);
+}
+
+/* ---------- Widget tile grid ---------- */
+
+.stl-widget-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 12px;
+}
+
+.stl-widget-tile {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 14px;
+	border: 1px solid var(--stl-border);
+	border-radius: 10px;
+	background: #fff;
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.stl-widget-tile:hover {
+	border-color: var(--stl-border-strong);
+	box-shadow: 0 4px 14px -6px rgba(15, 23, 42, 0.08);
+}
+
+.stl-widget-tile-icon {
+	width: 38px;
+	height: 38px;
+	border-radius: 8px;
+	background: var(--stl-orange-soft);
+	color: var(--stl-orange);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	font-size: 12px;
+	flex: 0 0 38px;
+}
+
+.stl-widget-tile-body {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	flex: 1;
+	min-width: 0;
+}
+
+.stl-widget-tile-body strong {
+	color: var(--stl-navy);
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.stl-widget-tile-slug {
+	color: var(--stl-muted);
+	font-size: 11.5px;
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---------- Toggle ---------- */
+
+.stl-switch {
+	position: relative;
+	width: 38px;
+	height: 22px;
+	flex: 0 0 38px;
+	cursor: pointer;
+}
+
+.stl-switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+.stl-switch-track {
+	position: absolute;
+	inset: 0;
+	background: #cbd5e1;
+	border-radius: 999px;
+	transition: background .2s ease;
+}
+
+.stl-switch-track::before {
+	content: "";
+	position: absolute;
+	left: 3px;
+	top: 3px;
+	width: 16px;
+	height: 16px;
+	background: #fff;
+	border-radius: 50%;
+	transition: transform .2s ease;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.stl-switch input:checked + .stl-switch-track {
+	background: var(--stl-orange);
+}
+
+.stl-switch input:checked + .stl-switch-track::before {
+	transform: translateX(16px);
+}
+
+.stl-switch input:disabled + .stl-switch-track {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+/* ---------- Sidebar cards ---------- */
+
+.stl-card-brand {
+	background: linear-gradient(160deg, var(--stl-navy) 0%, #283352 100%);
+	color: #e2e8f0;
+	border-color: transparent;
+}
+
+.stl-card-brand h3 {
+	color: #fff;
+	font-size: 16px;
+	margin-bottom: 6px;
+}
+
+.stl-card-brand p {
+	color: rgba(226, 232, 240, 0.78);
+	font-size: 13px;
+	margin: 0 0 14px 0;
+}
+
+.stl-list {
+	list-style: none;
+	margin: 0 0 18px 0;
+	padding: 0;
+}
+
+.stl-list li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 0;
+	font-size: 13px;
+	color: rgba(226, 232, 240, 0.88);
+}
+
+.stl-dot {
+	width: 6px;
+	height: 6px;
+	background: var(--stl-orange);
+	border-radius: 50%;
+	flex: 0 0 6px;
+}
+
+.stl-link-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.stl-link-list li {
+	padding: 8px 0;
+	border-bottom: 1px solid var(--stl-border);
+	font-size: 13.5px;
+}
+
+.stl-link-list li:last-child {
+	border-bottom: none;
+}
+
+.stl-link-list a {
+	color: var(--stl-navy);
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.stl-link-list a:hover {
+	color: var(--stl-orange);
+}
+
+/* ---------- Help tab ---------- */
+
+.stl-numbered {
+	margin: 0;
+	padding-left: 18px;
+	color: var(--stl-text);
+}
+
+.stl-numbered li {
+	padding: 4px 0;
+}
+
+.stl-code {
+	background: #0f172a;
+	color: #e2e8f0;
+	padding: 14px 16px;
+	border-radius: 8px;
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 12.5px;
+	overflow-x: auto;
+	margin: 8px 0 0 0;
+}
+
+.stl-empty {
+	color: var(--stl-muted);
+	font-style: italic;
+}
+
+/* WordPress admin overrides */
+.toplevel_page_stl-addons #wpcontent {
+	background: var(--stl-bg);
+	padding-left: 0;
+}
+
+.stl-admin .notice {
+	margin-left: 0;
+	margin-right: 0;
+}

@@ -1,0 +1,8 @@
+/* Stl Addons — shared styles loaded on every page that uses an Stl widget. */
+
+.stl-widget,
+.stl-widget *,
+.stl-widget *::before,
+.stl-widget *::after {
+	box-sizing: border-box;
+}
