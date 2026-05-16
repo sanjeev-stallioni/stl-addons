@@ -6,3 +6,6 @@
 .stl-widget *::after {
 	box-sizing: border-box;
 }
+.stl-wysiwyg-editor > p:last-child {
+	margin-bottom: 0;
+}

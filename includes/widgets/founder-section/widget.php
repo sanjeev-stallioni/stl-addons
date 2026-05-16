@@ -52,6 +52,14 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 			'default' => array( 'url' => \Elementor\Utils::get_placeholder_image_src() ),
 		) );
 
+		$this->add_group_control(
+			\Elementor\Group_Control_Image_Size::get_type(),
+			array(
+				'name'    => 'image_size',
+				'default' => 'large',
+			)
+		);
+
 		$this->add_control( 'badge_text', array(
 			'label'   => __( 'Top-Left Badge', 'stl-addons' ),
 			'type'    => \Elementor\Controls_Manager::TEXT,
@@ -107,7 +115,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 
 		$this->add_control( 'bio', array(
 			'label'   => __( 'Bio', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXTAREA,
+			'type'    => \Elementor\Controls_Manager::WYSIWYG,
 			'default' => __( 'A short paragraph introducing this person — their background, focus areas, and what they bring to the team. Keep it three to four lines for the best visual balance.', 'stl-addons' ),
 		) );
 
@@ -345,6 +353,16 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 			'selector' => '{{WRAPPER}} .stl-founder-name .stl-founder-it',
 		) );
 
+		$this->add_responsive_control( 'name_margin', array(
+			'label'        => __( 'Margin', 'stl-addons' ),
+			'type'         => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units'   => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
+			'allowed_dimensions' => 'all',
+			'selectors'    => array(
+				'{{WRAPPER}} .stl-founder-name' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			),
+		) );
+
 		$this->end_controls_section();
 	}
 
@@ -490,7 +508,6 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 
 	protected function render() {
 		$s            = $this->get_settings_for_display();
-		$photo_url    = ! empty( $s['photo']['url'] ) ? $s['photo']['url'] : '';
 		$badge_text   = $s['badge_text']  ?? '';
 		$vol_text     = $s['vol_text']    ?? '';
 		$meta_left    = $s['meta_left']   ?? '';
@@ -506,9 +523,18 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 		?>
 		<div class="stl-widget stl-founder-cover">
 			<div class="stl-founder-photo">
-				<?php if ( $photo_url ) : ?>
-					<img src="<?php echo esc_url( $photo_url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" />
-				<?php endif; ?>
+				<?php
+				$photo = isset( $s['photo'] ) && is_array( $s['photo'] ) ? $s['photo'] : array();
+				if ( ! empty( $photo['id'] ) ) {
+					echo \Elementor\Group_Control_Image_Size::get_attachment_image_html( $s, 'image_size', 'photo' );
+				} elseif ( ! empty( $photo['url'] ) ) {
+					printf(
+						'<img src="%s" alt="%s" loading="lazy" />',
+						esc_url( $photo['url'] ),
+						esc_attr( $alt )
+					);
+				}
+				?>
 				<?php if ( $badge_text ) : ?>
 					<span class="stl-founder-badge"><?php echo esc_html( $badge_text ); ?></span>
 				<?php endif; ?>
@@ -526,21 +552,25 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 					</div>
 				<?php endif; ?>
 
-				<?php if ( $name_first || $name_italic ) : ?>
-					<h3 class="stl-founder-name">
-						<?php echo esc_html( $name_first ); ?>
-						<?php if ( $name_italic ) : ?>
-							<span class="stl-founder-it"><?php echo esc_html( $name_italic ); ?></span>
+				<?php if ( $name_first || $name_italic || $role ) : ?>
+					<div class="stl-founder-name-block">
+						<?php if ( $name_first || $name_italic ) : ?>
+							<h3 class="stl-founder-name">
+								<?php echo esc_html( $name_first ); ?>
+								<?php if ( $name_italic ) : ?>
+									<span class="stl-founder-it"><?php echo esc_html( $name_italic ); ?></span>
+								<?php endif; ?>
+							</h3>
 						<?php endif; ?>
-					</h3>
-				<?php endif; ?>
 
-				<?php if ( $role ) : ?>
-					<p class="stl-founder-role"><?php echo esc_html( $role ); ?></p>
+						<?php if ( $role ) : ?>
+							<p class="stl-founder-role"><?php echo esc_html( $role ); ?></p>
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
 
 				<?php if ( $bio ) : ?>
-					<p class="stl-founder-bio"><?php echo wp_kses_post( $bio ); ?></p>
+					<div class="stl-founder-bio stl-wysiwyg-editor"><?php echo wp_kses_post( wpautop( $bio ) ); ?></div>
 				<?php endif; ?>
 
 				<?php if ( $quote ) : ?>

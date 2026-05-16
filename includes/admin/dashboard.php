@@ -148,7 +148,7 @@ final class STL_Addons_Admin {
 							$is_on = ! in_array( $slug, $disabled, true );
 							?>
 							<div class="stl-widget-tile">
-								<div class="stl-widget-tile-icon"><span><?php echo esc_html( strtoupper( substr( $title, 0, 2 ) ) ); ?></span></div>
+								<div class="stl-widget-tile-icon"><span class="dashicons <?php echo esc_attr( self::widget_icon( $slug ) ); ?>"></span></div>
 								<div class="stl-widget-tile-body">
 									<strong><?php echo esc_html( $title ); ?></strong>
 									<span class="stl-widget-tile-slug"><?php echo esc_html( $slug ); ?></span>
@@ -203,7 +203,7 @@ final class STL_Addons_Admin {
 					$is_on = ! in_array( $slug, $disabled, true );
 					?>
 					<div class="stl-widget-tile">
-						<div class="stl-widget-tile-icon"><span><?php echo esc_html( strtoupper( substr( $title, 0, 2 ) ) ); ?></span></div>
+						<div class="stl-widget-tile-icon"><span class="dashicons <?php echo esc_attr( self::widget_icon( $slug ) ); ?>"></span></div>
 						<div class="stl-widget-tile-body">
 							<strong><?php echo esc_html( $title ); ?></strong>
 							<span class="stl-widget-tile-slug"><?php echo esc_html( $slug ); ?></span>
@@ -268,6 +268,25 @@ includes/widgets/&lt;slug&gt;/assets/style.css</pre>
 		}
 		ksort( $found );
 		return $found;
+	}
+
+	/**
+	 * Return the Dashicons class used to represent a widget on the dashboard tile.
+	 */
+	private static function widget_icon( $slug ) {
+		$map = array(
+			'team-grid'       => 'dashicons-groups',
+			'founder-section' => 'dashicons-id-alt',
+		);
+
+		/**
+		 * Allow themes/plugins to customise the icon per widget slug.
+		 *
+		 * @param array $map slug => 'dashicons-XYZ'
+		 */
+		$map = apply_filters( 'stl_addons_widget_icons', $map );
+
+		return isset( $map[ $slug ] ) ? $map[ $slug ] : 'dashicons-screenoptions';
 	}
 
 	public static function disabled_widgets() {

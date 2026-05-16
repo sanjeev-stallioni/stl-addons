@@ -62,8 +62,7 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 
 		$rep->add_control( 'bio', array(
 			'label'   => __( 'Short Bio', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXTAREA,
-			'rows'    => 4,
+			'type'    => \Elementor\Controls_Manager::WYSIWYG,
 			'default' => __( 'A short, two-line description that introduces this person and what they do.', 'stl-addons' ),
 		) );
 
@@ -73,6 +72,15 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 			'default'     => 'Tag 1, Tag 2',
 			'description' => __( 'Comma-separated short labels (e.g. credentials, skills).', 'stl-addons' ),
 		) );
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Image_Size::get_type(),
+			array(
+				'name'      => 'image_size',
+				'default'   => 'large',
+				'separator' => 'before',
+			)
+		);
 
 		$this->add_control( 'members', array(
 			'label'       => __( 'Members', 'stl-addons' ),
@@ -376,17 +384,27 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 				<?php else : ?>
 					<div class="stl-team-grid">
 						<?php foreach ( $members as $m ) :
-							$photo = isset( $m['photo'] ) && ! empty( $m['photo']['url'] ) ? $m['photo']['url'] : \Elementor\Utils::get_placeholder_image_src();
-							$alt   = isset( $m['photo']['alt'] ) ? $m['photo']['alt'] : ( $m['name'] ?? '' );
+							$photo = isset( $m['photo'] ) && is_array( $m['photo'] ) ? $m['photo'] : array();
 							$name  = $m['name'] ?? '';
 							$role  = $m['role'] ?? '';
 							$bio   = $m['bio']  ?? '';
 							$tags  = isset( $m['tags'] ) ? $m['tags'] : '';
 							$tag_list = array_filter( array_map( 'trim', explode( ',', $tags ) ) );
+							$image_settings = array_merge( $s, array( 'photo' => $photo ) );
 							?>
 							<article class="stl-team-card">
 								<div class="stl-team-image">
-									<img src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" />
+									<?php
+									if ( ! empty( $photo['id'] ) || ! empty( $photo['url'] ) ) {
+										echo \Elementor\Group_Control_Image_Size::get_attachment_image_html( $image_settings, 'image_size', 'photo' );
+									} else {
+										printf(
+											'<img src="%s" alt="%s" loading="lazy" />',
+											esc_url( \Elementor\Utils::get_placeholder_image_src() ),
+											esc_attr( $name )
+										);
+									}
+									?>
 								</div>
 								<div class="stl-team-body">
 									<?php if ( $name ) : ?>
@@ -396,7 +414,7 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 										<div class="stl-team-role"><?php echo esc_html( $role ); ?></div>
 									<?php endif; ?>
 									<?php if ( $bio ) : ?>
-										<p class="stl-team-bio"><?php echo esc_html( $bio ); ?></p>
+										<div class="stl-team-bio stl-wysiwyg-editor"><?php echo wp_kses_post( wpautop( $bio ) ); ?></div>
 									<?php endif; ?>
 									<?php if ( ! empty( $tag_list ) ) : ?>
 										<div class="stl-team-tags">
