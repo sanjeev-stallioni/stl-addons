@@ -16,7 +16,15 @@ if ( ! class_exists( '\Elementor\Widget_Base' ) ) {
 	return;
 }
 
-class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
+use Elementor\Widget_Base;
+use Elementor\Controls_Manager;
+use Elementor\Utils;
+use Elementor\Group_Control_Image_Size;
+use Elementor\Group_Control_Typography;
+
+class STL_Widget_Founder_Section extends Widget_Base {
+
+	const ALLOWED_HEADING_TAGS = array( 'h2', 'h3', 'h4', 'h5', 'h6' );
 
 	public function get_name()           { return 'stl_founder_section'; }
 	public function get_title()          { return __( 'Founder Section', 'stl-addons' ); }
@@ -24,6 +32,14 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	public function get_categories()     { return array( 'stl-addons', 'general' ); }
 	public function get_keywords()       { return array( 'founder', 'leadership', 'about', 'profile', 'bio', 'stl' ); }
 	public function get_style_depends()  { return array( 'stl-founder-section' ); }
+
+	public function has_widget_inner_wrapper(): bool {
+		return false;
+	}
+
+	public function get_html_wrapper_class() {
+		return parent::get_html_wrapper_class() . ' stl-widget stl-founder-cover';
+	}
 
 	protected function register_controls() {
 		$this->controls_photo();
@@ -43,17 +59,17 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_photo() {
 		$this->start_controls_section( 'sec_photo', array(
 			'label' => __( 'Photo & Badge', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+			'tab'   => Controls_Manager::TAB_CONTENT,
 		) );
 
 		$this->add_control( 'photo', array(
 			'label'   => __( 'Founder Photo', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::MEDIA,
-			'default' => array( 'url' => \Elementor\Utils::get_placeholder_image_src() ),
+			'type'    => Controls_Manager::MEDIA,
+			'default' => array( 'url' => Utils::get_placeholder_image_src() ),
 		) );
 
 		$this->add_group_control(
-			\Elementor\Group_Control_Image_Size::get_type(),
+			Group_Control_Image_Size::get_type(),
 			array(
 				'name'    => 'image_size',
 				'default' => 'large',
@@ -62,13 +78,13 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 
 		$this->add_control( 'badge_text', array(
 			'label'   => __( 'Top-Left Badge', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXT,
+			'type'    => Controls_Manager::TEXT,
 			'default' => __( 'Leadership', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'vol_text', array(
 			'label'       => __( 'Bottom-Right Label', 'stl-addons' ),
-			'type'        => \Elementor\Controls_Manager::TEXT,
+			'type'        => Controls_Manager::TEXT,
 			'default'     => __( 'Vol. 01', 'stl-addons' ),
 			'description' => __( 'Small italic mark over the photo (e.g. "Vol. 01"). Leave blank to hide.', 'stl-addons' ),
 		) );
@@ -79,55 +95,69 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_text() {
 		$this->start_controls_section( 'sec_text', array(
 			'label' => __( 'Founder Info', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+			'tab'   => Controls_Manager::TAB_CONTENT,
+		) );
+
+		$this->add_control( 'name_tag', array(
+			'label'       => __( 'Name HTML Tag', 'stl-addons' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'h3',
+			'options'     => array(
+				'h2' => 'H2',
+				'h3' => 'H3',
+				'h4' => 'H4',
+				'h5' => 'H5',
+				'h6' => 'H6',
+			),
+			'description' => __( 'Pick the heading level that matches your page outline.', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'meta_left', array(
 			'label'   => __( 'Meta — Left', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXT,
+			'type'    => Controls_Manager::TEXT,
 			'default' => __( 'Founder, Company', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'meta_accent', array(
 			'label'   => __( 'Meta — Right (gold accent)', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXT,
+			'type'    => Controls_Manager::TEXT,
 			'default' => __( 'Featured Profile', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'name_first', array(
 			'label'   => __( 'Name (regular)', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXT,
+			'type'    => Controls_Manager::TEXT,
 			'default' => __( 'First', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'name_italic', array(
 			'label'       => __( 'Name (italic accent)', 'stl-addons' ),
-			'type'        => \Elementor\Controls_Manager::TEXT,
+			'type'        => Controls_Manager::TEXT,
 			'default'     => __( 'Last', 'stl-addons' ),
 			'description' => __( 'Rendered in italic accent style after the regular name.', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'role', array(
 			'label'   => __( 'Role', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXT,
+			'type'    => Controls_Manager::TEXT,
 			'default' => __( 'Founder & CEO', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'bio', array(
 			'label'   => __( 'Bio', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::WYSIWYG,
+			'type'    => Controls_Manager::WYSIWYG,
 			'default' => __( 'A short paragraph introducing this person — their background, focus areas, and what they bring to the team. Keep it three to four lines for the best visual balance.', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'quote', array(
 			'label'   => __( 'Quote', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXTAREA,
+			'type'    => Controls_Manager::TEXTAREA,
 			'default' => __( 'A single memorable line — a guiding principle, a belief, or a perspective that defines how this person approaches their work.', 'stl-addons' ),
 		) );
 
 		$this->add_control( 'tags', array(
 			'label'       => __( 'Tags', 'stl-addons' ),
-			'type'        => \Elementor\Controls_Manager::TEXT,
+			'type'        => Controls_Manager::TEXT,
 			'default'     => __( 'Tag 1, Tag 2, Tag 3, Tag 4', 'stl-addons' ),
 			'description' => __( 'Comma-separated. Each becomes a pill.', 'stl-addons' ),
 		) );
@@ -138,21 +168,21 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_card_style() {
 		$this->start_controls_section( 'sec_card_style', array(
 			'label' => __( 'Card', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'card_bg', array(
 			'label'     => __( 'Card Background', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array(
-				'{{WRAPPER}} .stl-founder-cover'       => 'background: {{VALUE}};',
+				'{{WRAPPER}}'                          => 'background: {{VALUE}};',
 				'{{WRAPPER}} .stl-founder-photo'       => 'background: linear-gradient(180deg, {{VALUE}}, {{VALUE}});',
 			),
 		) );
 
 		$this->add_responsive_control( 'card_max_width', array(
 			'label'      => __( 'Max Width', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'type'       => Controls_Manager::SLIDER,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'range'      => array(
 				'px'  => array( 'min' => 0, 'max' => 1000 ),
@@ -162,12 +192,12 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 				'vh'  => array( 'min' => 0, 'max' => 100 ),
 				'vw'  => array( 'min' => 0, 'max' => 100 ),
 			),
-			'selectors'  => array( '{{WRAPPER}} .stl-founder-cover' => 'max-width: {{SIZE}}{{UNIT}};' ),
+			'selectors'  => array( '{{WRAPPER}}' => 'max-width: {{SIZE}}{{UNIT}};' ),
 		) );
 
 		$this->add_responsive_control( 'photo_frame_height', array(
 			'label'      => __( 'Photo Frame Height', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'type'       => Controls_Manager::SLIDER,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'range'      => array(
 				'px'  => array( 'min' => 0, 'max' => 1000 ),
@@ -182,7 +212,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 
 		$this->add_responsive_control( 'card_radius', array(
 			'label'      => __( 'Card Border Radius', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'type'       => Controls_Manager::SLIDER,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'range'      => array(
 				'px'  => array( 'min' => 0, 'max' => 1000 ),
@@ -192,7 +222,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 				'vh'  => array( 'min' => 0, 'max' => 100 ),
 				'vw'  => array( 'min' => 0, 'max' => 100 ),
 			),
-			'selectors'  => array( '{{WRAPPER}} .stl-founder-cover' => 'border-radius: {{SIZE}}{{UNIT}};' ),
+			'selectors'  => array( '{{WRAPPER}}' => 'border-radius: {{SIZE}}{{UNIT}};' ),
 		) );
 
 		$this->end_controls_section();
@@ -218,22 +248,23 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_body_style() {
 		$this->start_controls_section( 'sec_body_style', array(
 			'label' => __( 'Body', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_responsive_control( 'body_padding', array(
 			'label'      => __( 'Body Padding', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'type'       => Controls_Manager::DIMENSIONS,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'selectors'  => array(
 				'{{WRAPPER}} .stl-founder-body' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				'{{WRAPPER}} .stl-founder-body::before'=> 'top: {{TOP}}{{UNIT}}; right: {{RIGHT}}{{UNIT}}; left: {{LEFT}}{{UNIT}};',
 			),
 		) );
 
 		$this->add_responsive_control( 'body_items_gap', array_merge(
 			array(
 				'label'     => __( 'Items Spacing', 'stl-addons' ),
-				'type'      => \Elementor\Controls_Manager::SLIDER,
+				'type'      => Controls_Manager::SLIDER,
 				'selectors' => array(
 					'{{WRAPPER}} .stl-founder-body'   => 'gap: {{SIZE}}{{UNIT}};',
 					'{{WRAPPER}} .stl-founder-body > *' => 'margin-top: 0; margin-bottom: 0;',
@@ -245,7 +276,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 
 		$this->add_control( 'body_top_divider_color', array(
 			'label'     => __( 'Top Divider Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-body::before' => 'background: {{VALUE}};' ),
 		) );
 
@@ -255,22 +286,22 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_badge_style() {
 		$this->start_controls_section( 'sec_badge_style', array(
 			'label' => __( 'Badge', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'badge_color', array(
 			'label'     => __( 'Text Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-badge' => 'color: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'badge_line_color', array(
 			'label'     => __( 'Line Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-badge::before' => 'background: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'badge_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-badge',
 		) );
@@ -281,16 +312,16 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_vol_style() {
 		$this->start_controls_section( 'sec_vol_style', array(
 			'label' => __( 'Vol Mark', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'vol_color', array(
 			'label'     => __( 'Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-vol' => 'color: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'vol_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-vol',
 		) );
@@ -301,22 +332,22 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_meta_style() {
 		$this->start_controls_section( 'sec_meta_style', array(
 			'label' => __( 'Meta Row', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'meta_color', array(
 			'label'     => __( 'Text Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-meta' => 'color: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'meta_accent_color', array(
 			'label'     => __( 'Accent Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-meta .stl-founder-accent' => 'color: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'meta_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-meta',
 		) );
@@ -327,27 +358,27 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_name_style() {
 		$this->start_controls_section( 'sec_name_style', array(
 			'label' => __( 'Name', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'name_color', array(
 			'label'     => __( 'Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-name' => 'color: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'name_accent_color', array(
 			'label'     => __( 'Italic Accent Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-name .stl-founder-it' => 'color: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'name_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-name',
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'name_accent_typo',
 			'label'    => __( 'Italic Accent Typography', 'stl-addons' ),
 			'selector' => '{{WRAPPER}} .stl-founder-name .stl-founder-it',
@@ -355,7 +386,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 
 		$this->add_responsive_control( 'name_margin', array(
 			'label'        => __( 'Margin', 'stl-addons' ),
-			'type'         => \Elementor\Controls_Manager::DIMENSIONS,
+			'type'         => Controls_Manager::DIMENSIONS,
 			'size_units'   => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'allowed_dimensions' => 'all',
 			'selectors'    => array(
@@ -369,16 +400,16 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_role_style() {
 		$this->start_controls_section( 'sec_role_style', array(
 			'label' => __( 'Role', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'role_color', array(
 			'label'     => __( 'Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-role' => 'color: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'role_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-role',
 		) );
@@ -389,16 +420,16 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_bio_style() {
 		$this->start_controls_section( 'sec_bio_style', array(
 			'label' => __( 'Bio', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'bio_color', array(
 			'label'     => __( 'Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-bio' => 'color: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'bio_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-bio',
 		) );
@@ -409,35 +440,35 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_quote_style() {
 		$this->start_controls_section( 'sec_quote_style', array(
 			'label' => __( 'Quote', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'quote_color', array(
 			'label'     => __( 'Text Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-quote' => 'color: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'quote_mark_color', array(
 			'label'     => __( 'Quote Mark Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-quote::before' => 'color: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'quote_divider_color', array(
 			'label'     => __( 'Top Divider Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-quote' => 'border-top-color: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'quote_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-quote',
 		) );
 
 		$this->add_responsive_control( 'quote_padding', array(
 			'label'      => __( 'Padding', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'type'       => Controls_Manager::DIMENSIONS,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'selectors'  => array(
 				'{{WRAPPER}} .stl-founder-quote' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -450,28 +481,28 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 	private function controls_tags_style() {
 		$this->start_controls_section( 'sec_tags_style', array(
 			'label' => __( 'Tags', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'tag_color', array(
 			'label'     => __( 'Text Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-tag' => 'color: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'tag_bg', array(
 			'label'     => __( 'Background', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-tag' => 'background: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'tag_border_color', array(
 			'label'     => __( 'Border Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-founder-tag' => 'border-color: {{VALUE}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'tag_typo',
 			'selector' => '{{WRAPPER}} .stl-founder-tag',
 		) );
@@ -479,7 +510,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 		$this->add_responsive_control( 'tag_radius', array_merge(
 			array(
 				'label'     => __( 'Border Radius', 'stl-addons' ),
-				'type'      => \Elementor\Controls_Manager::SLIDER,
+				'type'      => Controls_Manager::SLIDER,
 				'selectors' => array( '{{WRAPPER}} .stl-founder-tag' => 'border-radius: {{SIZE}}{{UNIT}};' ),
 			),
 			$this->std_slider_args()
@@ -487,7 +518,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 
 		$this->add_responsive_control( 'tag_padding', array(
 			'label'      => __( 'Padding', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'type'       => Controls_Manager::DIMENSIONS,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'selectors'  => array(
 				'{{WRAPPER}} .stl-founder-tag' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -497,7 +528,7 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 		$this->add_responsive_control( 'tags_gap', array_merge(
 			array(
 				'label'     => __( 'Gap Between Tags', 'stl-addons' ),
-				'type'      => \Elementor\Controls_Manager::SLIDER,
+				'type'      => Controls_Manager::SLIDER,
 				'selectors' => array( '{{WRAPPER}} .stl-founder-tags' => 'gap: {{SIZE}}{{UNIT}};' ),
 			),
 			$this->std_slider_args()
@@ -520,16 +551,17 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 		$tags_raw     = $s['tags']        ?? '';
 		$tags         = array_filter( array_map( 'trim', explode( ',', $tags_raw ) ) );
 		$alt          = trim( $name_first . ' ' . $name_italic );
+		$tag_raw      = $s['name_tag'] ?? 'h3';
+		$name_tag     = in_array( $tag_raw, self::ALLOWED_HEADING_TAGS, true ) ? $tag_raw : 'h3';
 		?>
-		<div class="stl-widget stl-founder-cover">
 			<div class="stl-founder-photo">
 				<?php
 				$photo = isset( $s['photo'] ) && is_array( $s['photo'] ) ? $s['photo'] : array();
 				if ( ! empty( $photo['id'] ) ) {
-					echo \Elementor\Group_Control_Image_Size::get_attachment_image_html( $s, 'image_size', 'photo' );
+					echo Group_Control_Image_Size::get_attachment_image_html( $s, 'image_size', 'photo' );
 				} elseif ( ! empty( $photo['url'] ) ) {
 					printf(
-						'<img src="%s" alt="%s" loading="lazy" />',
+						'<img src="%s" alt="%s" loading="lazy" decoding="async" />',
 						esc_url( $photo['url'] ),
 						esc_attr( $alt )
 					);
@@ -555,12 +587,12 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 				<?php if ( $name_first || $name_italic || $role ) : ?>
 					<div class="stl-founder-name-block">
 						<?php if ( $name_first || $name_italic ) : ?>
-							<h3 class="stl-founder-name">
+							<<?php echo $name_tag; ?> class="stl-founder-name">
 								<?php echo esc_html( $name_first ); ?>
 								<?php if ( $name_italic ) : ?>
 									<span class="stl-founder-it"><?php echo esc_html( $name_italic ); ?></span>
 								<?php endif; ?>
-							</h3>
+							</<?php echo $name_tag; ?>>
 						<?php endif; ?>
 
 						<?php if ( $role ) : ?>
@@ -585,8 +617,6 @@ class STL_Widget_Founder_Section extends \Elementor\Widget_Base {
 					</div>
 				<?php endif; ?>
 			</div>
-		</div>
 		<?php
 	}
 }
-

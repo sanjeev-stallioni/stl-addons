@@ -29,6 +29,11 @@ final class STL_Addons_Plugin {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_action( 'elementor/elements/categories_registered', array( __CLASS__, 'register_category' ) );
 		add_action( 'elementor/widgets/register', array( __CLASS__, 'register_widgets' ) );
+
+		// Inline widget CSS to drop render-blocking requests. Each widget CSS is
+		// tiny (~2–4 KB) and only loads when its widget is on the page, so the
+		// inline cost is bounded and the latency saving is real.
+		add_filter( 'style_loader_tag', array( __CLASS__, 'maybe_inline_widget_css' ), 10, 2 );
 	}
 
 	/**
@@ -55,16 +60,21 @@ final class STL_Addons_Plugin {
 
 	/**
 	 * Discover all widget folders and return [ slug => absolute path to widget.php ].
+	 * Memoized — the loader hooks call this multiple times per request.
 	 */
 	private static function discover_widgets() {
-		$found = array();
+		static $cache = null;
+		if ( null !== $cache ) {
+			return $cache;
+		}
+		$cache = array();
 		foreach ( (array) glob( STL_DIR . 'includes/widgets/*/widget.php' ) as $file ) {
 			$slug = basename( dirname( $file ) );
 			if ( preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
-				$found[ $slug ] = $file;
+				$cache[ $slug ] = $file;
 			}
 		}
-		return $found;
+		return $cache;
 	}
 
 	/**
@@ -118,6 +128,61 @@ final class STL_Addons_Plugin {
 				$widgets_manager->register( new $class() );
 			}
 		}
+	}
+
+	/**
+	 * Map a registered handle (e.g. "stl-button") to its absolute CSS path on disk.
+	 * Returns null for handles that don't belong to this plugin or have no file.
+	 */
+	private static function path_for_handle( $handle ) {
+		if ( 'stl-common' === $handle ) {
+			$path = STL_DIR . 'assets/common.css';
+			return file_exists( $path ) ? $path : null;
+		}
+		if ( 0 !== strpos( $handle, 'stl-' ) ) {
+			return null;
+		}
+		$slug = substr( $handle, 4 );
+		$widgets = self::discover_widgets();
+		if ( ! isset( $widgets[ $slug ] ) ) {
+			return null;
+		}
+		$path = STL_DIR . 'includes/widgets/' . $slug . '/assets/style.css';
+		return file_exists( $path ) ? $path : null;
+	}
+
+	/**
+	 * Replace `<link>` tags for our stl-* handles with inline `<style>` blocks.
+	 * Skipped inside the Elementor editor (the editor reloads CSS on edits and
+	 * needs the registered handle to remain a real stylesheet). Disable globally
+	 * with: add_filter( 'stl_addons_inline_widget_css', '__return_false' );
+	 */
+	public static function maybe_inline_widget_css( $tag, $handle ) {
+		if ( 0 !== strpos( (string) $handle, 'stl-' ) ) {
+			return $tag;
+		}
+		if ( ! apply_filters( 'stl_addons_inline_widget_css', true, $handle ) ) {
+			return $tag;
+		}
+		if ( class_exists( '\Elementor\Plugin' ) && isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			return $tag;
+		}
+
+		$path = self::path_for_handle( $handle );
+		if ( null === $path ) {
+			return $tag;
+		}
+
+		$css = @file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		if ( false === $css || '' === $css ) {
+			return $tag;
+		}
+
+		return sprintf(
+			"<style id=\"%s-inline-css\">%s</style>\n",
+			esc_attr( $handle ),
+			$css // CSS authored by us — already trusted; do not escape.
+		);
 	}
 
 	public static function notice_missing_elementor() {

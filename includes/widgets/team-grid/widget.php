@@ -13,7 +13,17 @@ if ( ! class_exists( '\Elementor\Widget_Base' ) ) {
 	return;
 }
 
-class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
+use Elementor\Widget_Base;
+use Elementor\Controls_Manager;
+use Elementor\Repeater;
+use Elementor\Utils;
+use Elementor\Group_Control_Image_Size;
+use Elementor\Group_Control_Typography;
+use Elementor\Group_Control_Box_Shadow;
+
+class STL_Widget_Team_Grid extends Widget_Base {
+
+	const ALLOWED_HEADING_TAGS = array( 'h2', 'h3', 'h4', 'h5', 'h6' );
 
 	public function get_name()           { return 'stl_team_grid'; }
 	public function get_title()          { return __( 'Team Grid', 'stl-addons' ); }
@@ -21,6 +31,14 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	public function get_categories()     { return array( 'stl-addons', 'general' ); }
 	public function get_keywords()       { return array( 'team', 'staff', 'people', 'members', 'about', 'crew', 'stl' ); }
 	public function get_style_depends()  { return array( 'stl-team-grid' ); }
+
+	public function has_widget_inner_wrapper(): bool {
+		return false;
+	}
+
+	public function get_html_wrapper_class() {
+		return parent::get_html_wrapper_class() . ' stl-widget stl-team-section';
+	}
 
 	protected function register_controls() {
 		$this->controls_members();
@@ -37,44 +55,58 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_members() {
 		$this->start_controls_section( 'sec_members', array(
 			'label' => __( 'Team Members', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+			'tab'   => Controls_Manager::TAB_CONTENT,
 		) );
 
-		$rep = new \Elementor\Repeater();
+		$this->add_control( 'name_tag', array(
+			'label'       => __( 'Name HTML Tag', 'stl-addons' ),
+			'type'        => Controls_Manager::SELECT,
+			'default'     => 'h3',
+			'options'     => array(
+				'h2' => 'H2',
+				'h3' => 'H3',
+				'h4' => 'H4',
+				'h5' => 'H5',
+				'h6' => 'H6',
+			),
+			'description' => __( 'Pick the heading level that matches your page outline.', 'stl-addons' ),
+		) );
+
+		$rep = new Repeater();
 
 		$rep->add_control( 'photo', array(
 			'label'   => __( 'Photo', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::MEDIA,
-			'default' => array( 'url' => \Elementor\Utils::get_placeholder_image_src() ),
+			'type'    => Controls_Manager::MEDIA,
+			'default' => array( 'url' => Utils::get_placeholder_image_src() ),
 		) );
 
 		$rep->add_control( 'name', array(
 			'label'   => __( 'Name', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXT,
+			'type'    => Controls_Manager::TEXT,
 			'default' => __( 'Team member name', 'stl-addons' ),
 		) );
 
 		$rep->add_control( 'role', array(
 			'label'   => __( 'Role / Title', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::TEXT,
+			'type'    => Controls_Manager::TEXT,
 			'default' => __( 'Role at company', 'stl-addons' ),
 		) );
 
 		$rep->add_control( 'bio', array(
 			'label'   => __( 'Short Bio', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::WYSIWYG,
+			'type'    => Controls_Manager::WYSIWYG,
 			'default' => __( 'A short, two-line description that introduces this person and what they do.', 'stl-addons' ),
 		) );
 
 		$rep->add_control( 'tags', array(
 			'label'       => __( 'Tag Pills', 'stl-addons' ),
-			'type'        => \Elementor\Controls_Manager::TEXT,
+			'type'        => Controls_Manager::TEXT,
 			'default'     => 'Tag 1, Tag 2',
 			'description' => __( 'Comma-separated short labels (e.g. credentials, skills).', 'stl-addons' ),
 		) );
 
 		$this->add_group_control(
-			\Elementor\Group_Control_Image_Size::get_type(),
+			Group_Control_Image_Size::get_type(),
 			array(
 				'name'      => 'image_size',
 				'default'   => 'large',
@@ -84,7 +116,7 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 
 		$this->add_control( 'members', array(
 			'label'       => __( 'Members', 'stl-addons' ),
-			'type'        => \Elementor\Controls_Manager::REPEATER,
+			'type'        => Controls_Manager::REPEATER,
 			'fields'      => $rep->get_controls(),
 			'default'     => array(
 				array(
@@ -112,12 +144,12 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_layout() {
 		$this->start_controls_section( 'sec_layout', array(
 			'label' => __( 'Layout', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_responsive_control( 'columns', array(
 			'label'   => __( 'Columns', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::SELECT,
+			'type'    => Controls_Manager::SELECT,
 			'default' => '3',
 			'tablet_default' => '2',
 			'mobile_default' => '1',
@@ -127,7 +159,7 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 
 		$this->add_responsive_control( 'gap', array(
 			'label'      => __( 'Column / Row Gap', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'type'       => Controls_Manager::SLIDER,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'range'      => array(
 				'px'  => array( 'min' => 0, 'max' => 1000 ),
@@ -142,30 +174,15 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 
 		$this->add_control( 'bg_color', array(
 			'label'     => __( 'Section Background', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
-			'selectors' => array( '{{WRAPPER}} .stl-team-section' => 'background: {{VALUE}};' ),
+			'type'      => Controls_Manager::COLOR,
+			'selectors' => array( '{{WRAPPER}}' => 'background: {{VALUE}};' ),
 		) );
 
 		$this->add_responsive_control( 'section_padding', array(
 			'label'      => __( 'Section Padding', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'type'       => Controls_Manager::DIMENSIONS,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
-			'selectors'  => array( '{{WRAPPER}} .stl-team-section' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ),
-		) );
-
-		$this->add_responsive_control( 'max_width', array(
-			'label'      => __( 'Max Width', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
-			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
-			'range'      => array(
-				'px'  => array( 'min' => 0, 'max' => 1000 ),
-				'em'  => array( 'min' => 0, 'max' => 100 ),
-				'rem' => array( 'min' => 0, 'max' => 100 ),
-				'%'   => array( 'min' => 0, 'max' => 100 ),
-				'vh'  => array( 'min' => 0, 'max' => 100 ),
-				'vw'  => array( 'min' => 0, 'max' => 100 ),
-			),
-			'selectors'  => array( '{{WRAPPER}} .stl-team-wrap' => 'max-width: {{SIZE}}{{UNIT}};' ),
+			'selectors'  => array( '{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ),
 		) );
 
 		$this->end_controls_section();
@@ -174,24 +191,24 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_card() {
 		$this->start_controls_section( 'sec_card', array(
 			'label' => __( 'Card', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'card_bg', array(
 			'label'     => __( 'Background', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-card' => 'background: {{VALUE}};' ),
 		) );
 
 		$this->add_control( 'card_border_color', array(
 			'label'     => __( 'Border Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-card' => 'border-color: {{VALUE}};' ),
 		) );
 
 		$this->add_responsive_control( 'card_radius', array(
 			'label'      => __( 'Border Radius', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'type'       => Controls_Manager::SLIDER,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'range'      => array(
 				'px'  => array( 'min' => 0, 'max' => 1000 ),
@@ -206,12 +223,12 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 
 		$this->add_responsive_control( 'card_padding', array(
 			'label'      => __( 'Body Padding', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'type'       => Controls_Manager::DIMENSIONS,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'selectors'  => array( '{{WRAPPER}} .stl-team-body' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ),
 		) );
 
-		$this->add_group_control( \Elementor\Group_Control_Box_Shadow::get_type(), array(
+		$this->add_group_control( Group_Control_Box_Shadow::get_type(), array(
 			'name'     => 'card_shadow',
 			'selector' => '{{WRAPPER}} .stl-team-card',
 		) );
@@ -222,12 +239,12 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_image() {
 		$this->start_controls_section( 'sec_image', array(
 			'label' => __( 'Image', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_responsive_control( 'image_height', array(
 			'label'      => __( 'Height', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'type'       => Controls_Manager::SLIDER,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'range'      => array(
 				'px'  => array( 'min' => 0, 'max' => 1000 ),
@@ -242,7 +259,7 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 
 		$this->add_control( 'image_fit', array(
 			'label'   => __( 'Object Fit', 'stl-addons' ),
-			'type'    => \Elementor\Controls_Manager::SELECT,
+			'type'    => Controls_Manager::SELECT,
 			'default' => 'cover',
 			'options' => array(
 				'cover'   => __( 'Cover', 'stl-addons' ),
@@ -257,14 +274,14 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_name() {
 		$this->start_controls_section( 'sec_name', array(
 			'label' => __( 'Name', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 		$this->add_control( 'name_color', array(
 			'label'     => __( 'Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-name' => 'color: {{VALUE}};' ),
 		) );
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'name_typo',
 			'selector' => '{{WRAPPER}} .stl-team-name',
 		) );
@@ -274,14 +291,14 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_role() {
 		$this->start_controls_section( 'sec_role', array(
 			'label' => __( 'Role', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 		$this->add_control( 'role_color', array(
 			'label'     => __( 'Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-role' => 'color: {{VALUE}};' ),
 		) );
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'role_typo',
 			'selector' => '{{WRAPPER}} .stl-team-role',
 		) );
@@ -291,14 +308,14 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_bio() {
 		$this->start_controls_section( 'sec_bio', array(
 			'label' => __( 'Bio', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 		$this->add_control( 'bio_color', array(
 			'label'     => __( 'Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-bio' => 'color: {{VALUE}};' ),
 		) );
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'bio_typo',
 			'selector' => '{{WRAPPER}} .stl-team-bio',
 		) );
@@ -308,30 +325,30 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_tags() {
 		$this->start_controls_section( 'sec_tags', array(
 			'label' => __( 'Tag Pills', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 		$this->add_control( 'tag_bg', array(
 			'label'     => __( 'Background', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-tag' => 'background: {{VALUE}};' ),
 		) );
 		$this->add_control( 'tag_border', array(
 			'label'     => __( 'Border', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-tag' => 'border-color: {{VALUE}};' ),
 		) );
 		$this->add_control( 'tag_color', array(
 			'label'     => __( 'Text Color', 'stl-addons' ),
-			'type'      => \Elementor\Controls_Manager::COLOR,
+			'type'      => Controls_Manager::COLOR,
 			'selectors' => array( '{{WRAPPER}} .stl-team-tag' => 'color: {{VALUE}};' ),
 		) );
-		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), array(
+		$this->add_group_control( Group_Control_Typography::get_type(), array(
 			'name'     => 'tag_typo',
 			'selector' => '{{WRAPPER}} .stl-team-tag',
 		) );
 		$this->add_responsive_control( 'tag_radius', array(
 			'label'      => __( 'Radius', 'stl-addons' ),
-			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'type'       => Controls_Manager::SLIDER,
 			'size_units' => array( 'px', 'em', 'rem', '%', 'vh', 'vw', 'custom' ),
 			'range'      => array(
 				'px'  => array( 'min' => 0, 'max' => 1000 ),
@@ -349,12 +366,12 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	private function controls_hover() {
 		$this->start_controls_section( 'sec_hover', array(
 			'label' => __( 'Hover', 'stl-addons' ),
-			'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+			'tab'   => Controls_Manager::TAB_STYLE,
 		) );
 
 		$this->add_control( 'enable_lift', array(
 			'label'        => __( 'Lift Card on Hover', 'stl-addons' ),
-			'type'         => \Elementor\Controls_Manager::SWITCHER,
+			'type'         => Controls_Manager::SWITCHER,
 			'return_value' => 'yes',
 			'default'      => 'yes',
 			'selectors_dictionary' => array( 'yes' => 'translateY(-4px)', '' => 'none' ),
@@ -363,7 +380,7 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 
 		$this->add_control( 'enable_zoom', array(
 			'label'        => __( 'Zoom Image on Hover', 'stl-addons' ),
-			'type'         => \Elementor\Controls_Manager::SWITCHER,
+			'type'         => Controls_Manager::SWITCHER,
 			'return_value' => 'yes',
 			'default'      => 'yes',
 			'selectors_dictionary' => array( 'yes' => 'scale(1.04)', '' => 'scale(1)' ),
@@ -374,62 +391,60 @@ class STL_Widget_Team_Grid extends \Elementor\Widget_Base {
 	}
 
 	protected function render() {
-		$s       = $this->get_settings_for_display();
-		$members = ( isset( $s['members'] ) && is_array( $s['members'] ) ) ? $s['members'] : array();
+		$s        = $this->get_settings_for_display();
+		$members  = ( isset( $s['members'] ) && is_array( $s['members'] ) ) ? $s['members'] : array();
+		$tag_raw  = $s['name_tag'] ?? 'h3';
+		$name_tag = in_array( $tag_raw, self::ALLOWED_HEADING_TAGS, true ) ? $tag_raw : 'h3';
 		?>
-		<section class="stl-widget stl-team-section">
-			<div class="stl-team-wrap">
-				<?php if ( empty( $members ) ) : ?>
-					<p class="stl-team-empty"><?php esc_html_e( 'Add members from the Content tab → Team Members.', 'stl-addons' ); ?></p>
-				<?php else : ?>
-					<div class="stl-team-grid">
-						<?php foreach ( $members as $m ) :
-							$photo = isset( $m['photo'] ) && is_array( $m['photo'] ) ? $m['photo'] : array();
-							$name  = $m['name'] ?? '';
-							$role  = $m['role'] ?? '';
-							$bio   = $m['bio']  ?? '';
-							$tags  = isset( $m['tags'] ) ? $m['tags'] : '';
-							$tag_list = array_filter( array_map( 'trim', explode( ',', $tags ) ) );
-							$image_settings = array_merge( $s, array( 'photo' => $photo ) );
+		<?php if ( empty( $members ) ) : ?>
+			<p class="stl-team-empty"><?php esc_html_e( 'Add members from the Content tab → Team Members.', 'stl-addons' ); ?></p>
+		<?php else : ?>
+			<div class="stl-team-grid">
+				<?php foreach ( $members as $m ) :
+					$photo = isset( $m['photo'] ) && is_array( $m['photo'] ) ? $m['photo'] : array();
+					$name  = $m['name'] ?? '';
+					$role  = $m['role'] ?? '';
+					$bio   = $m['bio']  ?? '';
+					$tags  = isset( $m['tags'] ) ? $m['tags'] : '';
+					$tag_list = array_filter( array_map( 'trim', explode( ',', $tags ) ) );
+					$image_settings = array_merge( $s, array( 'photo' => $photo ) );
+					?>
+					<article class="stl-team-card">
+						<div class="stl-team-image">
+							<?php
+							if ( ! empty( $photo['id'] ) || ! empty( $photo['url'] ) ) {
+								echo Group_Control_Image_Size::get_attachment_image_html( $image_settings, 'image_size', 'photo' );
+							} else {
+								printf(
+									'<img src="%s" alt="%s" loading="lazy" decoding="async" />',
+									esc_url( Utils::get_placeholder_image_src() ),
+									esc_attr( $name )
+								);
+							}
 							?>
-							<article class="stl-team-card">
-								<div class="stl-team-image">
-									<?php
-									if ( ! empty( $photo['id'] ) || ! empty( $photo['url'] ) ) {
-										echo \Elementor\Group_Control_Image_Size::get_attachment_image_html( $image_settings, 'image_size', 'photo' );
-									} else {
-										printf(
-											'<img src="%s" alt="%s" loading="lazy" />',
-											esc_url( \Elementor\Utils::get_placeholder_image_src() ),
-											esc_attr( $name )
-										);
-									}
-									?>
+						</div>
+						<div class="stl-team-body">
+							<?php if ( $name ) : ?>
+								<<?php echo $name_tag; ?> class="stl-team-name"><?php echo esc_html( $name ); ?></<?php echo $name_tag; ?>>
+							<?php endif; ?>
+							<?php if ( $role ) : ?>
+								<div class="stl-team-role"><?php echo esc_html( $role ); ?></div>
+							<?php endif; ?>
+							<?php if ( $bio ) : ?>
+								<div class="stl-team-bio stl-wysiwyg-editor"><?php echo wp_kses_post( wpautop( $bio ) ); ?></div>
+							<?php endif; ?>
+							<?php if ( ! empty( $tag_list ) ) : ?>
+								<div class="stl-team-tags">
+									<?php foreach ( $tag_list as $tag ) : ?>
+										<span class="stl-team-tag"><?php echo esc_html( $tag ); ?></span>
+									<?php endforeach; ?>
 								</div>
-								<div class="stl-team-body">
-									<?php if ( $name ) : ?>
-										<h3 class="stl-team-name"><?php echo esc_html( $name ); ?></h3>
-									<?php endif; ?>
-									<?php if ( $role ) : ?>
-										<div class="stl-team-role"><?php echo esc_html( $role ); ?></div>
-									<?php endif; ?>
-									<?php if ( $bio ) : ?>
-										<div class="stl-team-bio stl-wysiwyg-editor"><?php echo wp_kses_post( wpautop( $bio ) ); ?></div>
-									<?php endif; ?>
-									<?php if ( ! empty( $tag_list ) ) : ?>
-										<div class="stl-team-tags">
-											<?php foreach ( $tag_list as $tag ) : ?>
-												<span class="stl-team-tag"><?php echo esc_html( $tag ); ?></span>
-											<?php endforeach; ?>
-										</div>
-									<?php endif; ?>
-								</div>
-							</article>
-						<?php endforeach; ?>
-					</div>
-				<?php endif; ?>
+							<?php endif; ?>
+						</div>
+					</article>
+				<?php endforeach; ?>
 			</div>
-		</section>
+		<?php endif; ?>
 		<?php
 	}
 }

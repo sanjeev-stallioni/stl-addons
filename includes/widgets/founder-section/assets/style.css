@@ -1,7 +1,6 @@
 /* Founder Section — editorial cover layout. */
 
 .stl-founder-cover {
-	max-width: 1100px;
 	margin: 0 auto;
 	position: relative;
 	display: grid;
@@ -80,6 +79,7 @@
 	flex-direction: column;
 	justify-content: center;
 	position: relative;
+	gap: 22px;
 }
 
 .stl-founder-body::before {
@@ -109,7 +109,7 @@
 }
 
 .stl-founder-name {
-	margin: 36px 0 6px;
+	margin: 20px 0 0 0;
 	font-weight: 600;
 	font-size: 48px;
 	line-height: 1;
@@ -134,18 +134,17 @@
 	color: rgba(245, 236, 214, 0.78);
 	font-size: 15.5px;
 	line-height: 1.7;
-	margin: 0 0 24px;
-	max-width: 48ch;
+	max-width: 450px;
 }
 
 .stl-founder-quote {
-	margin-top: 12px;
-	padding: 40px 0 0 36px;
+	padding: 40px 0 10px 36px;
 	border-top: 1px solid rgba(201, 166, 104, 0.22);
 	font-style: italic;
 	font-size: 20px;
 	line-height: 1.5;
 	color: #F5ECD6;
+	margin: 0;
 	position: relative;
 }
 
@@ -161,7 +160,6 @@
 }
 
 .stl-founder-tags {
-	margin-top: 28px;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 6px;
@@ -189,9 +187,5 @@
 
 	.stl-founder-body {
 		padding: 36px 28px;
-	}
-
-	.stl-founder-body::before {
-		display: none;
 	}
 }

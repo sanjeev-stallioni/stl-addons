@@ -1,0 +1,125 @@
+/* Stl Addons — Button frontend styles. Two animated variants. */
+
+.stl-btn {
+	position: relative;
+	display: inline-block;
+	padding: 0.8rem 1.6rem;
+	background: transparent;
+	border: none;
+	outline: none;
+	text-decoration: none;
+	color: #000;
+	cursor: pointer;
+	font: inherit;
+}
+
+.stl-btn:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}
+
+/* ---------- Style 1 — Layered Push ---------- */
+
+.stl-btn-style-1 {
+	--stl-btn-offset-x: 0.25rem;
+	--stl-btn-offset-y: 0.25rem;
+}
+
+.stl-btn-style-1 .stl-btn-layer-back,
+.stl-btn-style-1 .stl-btn-layer-front {
+	position: absolute;
+	inset: 0;
+}
+
+.stl-btn-style-1 .stl-btn-layer-back {
+	background: #000;
+	transform: translate(var(--stl-btn-offset-x), var(--stl-btn-offset-y));
+	transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.stl-btn-style-1 .stl-btn-layer-front {
+	background: #fff;
+	border: 2px solid #000;
+	transition: background 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.stl-btn-style-1 .stl-btn-text {
+	position: relative;
+}
+
+.stl-btn-style-1:hover {
+	color: #fff;
+}
+
+.stl-btn-style-1:hover .stl-btn-layer-front {
+	background: #000;
+}
+
+.stl-btn-style-1:hover .stl-btn-layer-back {
+	transform: translate(0, 0);
+}
+
+/* ---------- Style 2 — Frame Draw ---------- */
+
+.stl-btn-style-2 {
+	overflow: hidden;
+	color: #800000;
+}
+
+.stl-btn-style-2 .stl-btn-text {
+	display: inline-block;
+}
+
+.stl-btn-style-2::before,
+.stl-btn-style-2::after {
+	content: "";
+	position: absolute;
+	background: #800000;
+	height: 2px;
+	width: 100%;
+	transition: transform 300ms;
+}
+
+.stl-btn-style-2::before {
+	top: 0;
+	left: 0;
+	transform: translateX(-70%);
+}
+
+.stl-btn-style-2::after {
+	bottom: 0;
+	right: 0;
+	transform: translateX(70%);
+}
+
+.stl-btn-style-2 .stl-btn-text::before,
+.stl-btn-style-2 .stl-btn-text::after {
+	content: "";
+	position: absolute;
+	background: #800000;
+	width: 2px;
+	height: 100%;
+	transition: transform 300ms;
+}
+
+.stl-btn-style-2 .stl-btn-text::before {
+	top: 0;
+	left: 0;
+	transform: translateY(-50%);
+}
+
+.stl-btn-style-2 .stl-btn-text::after {
+	bottom: 0;
+	right: 0;
+	transform: translateY(50%);
+}
+
+.stl-btn-style-2:hover::before,
+.stl-btn-style-2:hover::after {
+	transform: translateX(0);
+}
+
+.stl-btn-style-2:hover .stl-btn-text::before,
+.stl-btn-style-2:hover .stl-btn-text::after {
+	transform: translateY(0);
+}

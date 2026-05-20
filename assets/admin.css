@@ -287,14 +287,16 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	font-size: 12px;
 	flex: 0 0 38px;
 }
 
-.stl-widget-tile-icon .dashicons {
-	font-size: 22px;
+.stl-widget-tile-icon svg {
 	width: 22px;
 	height: 22px;
-	line-height: 1;
+	display: block;
 }
 
 .stl-widget-tile-body {
@@ -465,10 +467,11 @@
 	font-style: italic;
 }
 
-/* WordPress admin overrides */
-.toplevel_page_stl-addons #wpcontent {
+/* WordPress admin overrides — apply to all three Stl Addons pages */
+.toplevel_page_stl-addons #wpcontent,
+.stl-addons_page_stl-addons-widgets #wpcontent,
+.stl-addons_page_stl-addons-help #wpcontent {
 	background: var(--stl-bg);
-	padding-left: 0;
 }
 
 .stl-admin .notice {

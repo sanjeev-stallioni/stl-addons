@@ -5,11 +5,6 @@
 	color: #1a1a1a;
 }
 
-.stl-team-wrap {
-	max-width: 1200px;
-	margin: 0 auto;
-}
-
 .stl-team-grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
