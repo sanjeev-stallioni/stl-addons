@@ -1,0 +1,275 @@
+/* Stl Addons — Social Links frontend styles.
+ *
+ * Two presentation styles, both scoped to .stl-social-links:
+ *   .stl-sl-rail   — fixed left/right edge rail of icon + label rows
+ *   .stl-sl-radial — floating action button at a corner that fans social
+ *                    icons out in a quarter-circle arc when opened.
+ *
+ * All ".elementor-widget" wrappers are unstyled here; the widget opts out of
+ * the inner wrapper, so these rules apply directly to the rendered elements.
+ */
+
+/* =====================================================================
+ * Style 1 — Sliding Rail
+ * ===================================================================== */
+
+.stl-social-links .stl-sl-rail {
+	position: fixed;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 55px;
+	z-index: 99;
+}
+.stl-social-links .stl-sl-rail.is-right { right: 0; }
+.stl-social-links .stl-sl-rail.is-left  { left: 0; }
+
+.stl-social-links .stl-sl-rail-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	transform: translateX(-10px);
+}
+.stl-social-links .stl-sl-rail.is-left .stl-sl-rail-list {
+	transform: translateX(-262px);
+}
+
+.stl-social-links .stl-sl-rail-item {
+	display: block;
+	margin: 5px;
+	background-color: rgba(0, 0, 0, .5);
+	width: 300px;
+	padding: 10px;
+	border-radius: 30px 0 0 30px;
+	transition: transform 1s, background-color 1s;
+}
+.stl-social-links .stl-sl-rail.is-left .stl-sl-rail-item {
+	border-radius: 0 30px 30px 0;
+}
+.stl-social-links .stl-sl-rail.is-right .stl-sl-rail-item:hover {
+	transform: translateX(-150px);
+}
+.stl-social-links .stl-sl-rail.is-left .stl-sl-rail-item:hover {
+	transform: translateX(150px);
+}
+
+.stl-social-links .stl-sl-rail-item a {
+	color: #fff;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.stl-social-links .stl-sl-rail.is-left .stl-sl-rail-item a {
+	justify-content: flex-end;
+}
+
+.stl-social-links .stl-sl-rail-icon {
+	margin-left: 10px;
+	color: #000;
+	background: #fff;
+	padding: 10px;
+	border-radius: 50%;
+	/* width: 30px;
+	height: 30px; */
+	transform: rotate(0deg);
+	text-align: center;
+	font-size: 20px;
+	transition: transform 1s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.stl-social-links .stl-sl-rail-icon svg {
+	width: 16px;
+    height: 16px;
+}
+.stl-social-links .stl-sl-rail.is-left .stl-sl-rail-item .stl-sl-rail-icon {
+	margin-left: 0;
+	margin-right: 10px;
+}
+
+.stl-social-links .stl-sl-rail.is-right .stl-sl-rail-item:hover .stl-sl-rail-icon {
+	transform: rotate(-360deg);
+}
+.stl-social-links .stl-sl-rail.is-left .stl-sl-rail-item:hover .stl-sl-rail-icon {
+	transform: rotate(360deg);
+}
+
+/* =====================================================================
+ * Style 2 — Radial FAB
+ * ===================================================================== */
+
+.stl-social-links .stl-sl-radial {
+	position: fixed;
+	z-index: 99;
+}
+.stl-social-links .stl-sl-radial.is-bottom-right {
+	left: 100px;
+	bottom: 100px;
+}
+.stl-social-links .stl-sl-radial.is-bottom-left {
+	right: 100px;
+	bottom: 100px;
+}
+
+.stl-social-links .stl-sl-radial-trigger {
+	position: absolute;
+	z-index: 2;
+	left: 50%;
+	top: 50%;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 60px;
+	height: 60px;
+	border: none;
+	color: #fff;
+	font-size: 20px;
+	border-radius: 50%;
+	text-decoration: none;
+	background-color: #4b40cc;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .15), 0 4px 8px rgba(0, 0, 0, .2);
+	transition: all .15s ease-in-out;
+	transform: translate(-50%, -50%);
+}
+.stl-social-links .stl-sl-radial-trigger .stl-sl-btn-icon {
+	transition: transform .2s ease-in-out;
+	display: flex;
+}
+
+.stl-social-links .stl-sl-radial-menu {
+	--stl-sl-width: 200px;
+	width: var(--stl-sl-width);
+	height: var(--stl-sl-width);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	transform: translate(-50%, -50%);
+}
+
+.stl-social-links .stl-sl-radial-item {
+	--stl-sl-point-size: 40px;
+	list-style: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: var(--stl-sl-point-size);
+	height: var(--stl-sl-point-size);
+	transform: translate(-50%, -50%);
+	transition: all .3s ease;
+}
+.stl-social-links .stl-sl-radial-item a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	color: #fff;
+	border-radius: 50%;
+	background-color: #232e50;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .15), 0 4px 8px rgba(0, 0, 0, .2);
+	text-decoration: none;
+	transition: transform .25s, background-color .25s;
+	transform: scale(1.1);
+}
+.stl-social-links .stl-sl-radial-item a:hover {
+	transform: scale(.8);
+	background-color: #1b243e;
+}
+
+.stl-social-links .stl-sl-radial-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.stl-social-links .stl-sl-radial-icon i {
+	font-size: 16px;
+	color: #fff;
+}
+.stl-social-links .stl-sl-radial-icon svg,
+.stl-social-links .stl-sl-radial-trigger .stl-sl-btn-icon svg {
+	width: 16px;
+	height: 16px;
+	fill: #fff;
+}
+
+/* --- Active (open) state, common --- */
+.stl-social-links .stl-sl-radial.is-active .stl-sl-radial-trigger .stl-sl-btn-icon {
+	transform: rotateZ(135deg);
+}
+.stl-social-links .stl-sl-radial.is-active .stl-sl-radial-item {
+	--stl-sl-angle: 0deg;
+	--stl-sl-star-angle: 0deg;
+	--stl-sl-count: 8;
+	--stl-sl-radius: calc((var(--stl-sl-width) / 2) - (var(--stl-sl-point-size) / 2));
+	--stl-sl-x: calc(var(--stl-sl-radius) * cos(var(--stl-sl-angle) + var(--stl-sl-star-angle)));
+	--stl-sl-y: calc(var(--stl-sl-radius) * sin(var(--stl-sl-angle) + var(--stl-sl-star-angle)));
+	top: calc(var(--stl-sl-radius) + var(--stl-sl-y) + (var(--stl-sl-point-size) / 2));
+	left: calc(var(--stl-sl-radius) + var(--stl-sl-x) + (var(--stl-sl-point-size) / 2));
+}
+
+/* Bottom-right corner — fan up & to the right */
+.stl-social-links .stl-sl-radial.is-bottom-right.is-active .stl-sl-radial-item {
+	--stl-sl-star-angle: 270deg;
+}
+.stl-social-links .stl-sl-radial.is-bottom-right.is-active .stl-sl-radial-item:nth-child(1) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) * 0); transition-delay: .05s; }
+.stl-social-links .stl-sl-radial.is-bottom-right.is-active .stl-sl-radial-item:nth-child(2) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) * 1); transition-delay: .10s; }
+.stl-social-links .stl-sl-radial.is-bottom-right.is-active .stl-sl-radial-item:nth-child(3) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) * 2); transition-delay: .15s; }
+.stl-social-links .stl-sl-radial.is-bottom-right.is-active .stl-sl-radial-item:nth-child(4) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) * 3); transition-delay: .20s; }
+
+/* Bottom-left corner — fan up & to the left */
+.stl-social-links .stl-sl-radial.is-bottom-left.is-active .stl-sl-radial-item {
+	--stl-sl-star-angle: 180deg;
+}
+.stl-social-links .stl-sl-radial.is-bottom-left.is-active .stl-sl-radial-item:nth-child(1) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) * -1); transition-delay: .05s; }
+.stl-social-links .stl-sl-radial.is-bottom-left.is-active .stl-sl-radial-item:nth-child(2) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) *  0); transition-delay: .10s; }
+.stl-social-links .stl-sl-radial.is-bottom-left.is-active .stl-sl-radial-item:nth-child(3) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) *  1); transition-delay: .15s; }
+.stl-social-links .stl-sl-radial.is-bottom-left.is-active .stl-sl-radial-item:nth-child(4) { --stl-sl-angle: calc((360deg / var(--stl-sl-count)) *  2); transition-delay: .20s; }
+
+/* Optional "show only 3" toggles */
+.stl-social-links .stl-sl-radial.hide-last.is-active  .stl-sl-radial-item:nth-child(4) { display: none; }
+.stl-social-links .stl-sl-radial.hide-first.is-active .stl-sl-radial-item:nth-child(1) { display: none; }
+
+/* --- Animated chat-bubble trigger icon --- */
+.stl-social-links .stl-sl-bubble {
+	cursor: pointer;
+	position: relative;
+}
+.stl-social-links .stl-sl-bubble .stl-sl-bubble-shape {
+	transition: transform 500ms cubic-bezier(.17, .61, .54, .9);
+	transform-origin: 50%;
+}
+.stl-social-links .stl-sl-bubble .line {
+	fill: none;
+	stroke: #fff;
+	stroke-width: 2.75;
+	stroke-linecap: round;
+	transition: stroke-dashoffset 500ms cubic-bezier(.4, 0, .2, 1);
+}
+.stl-social-links .stl-sl-bubble .stl-sl-dot {
+	fill: #fff;
+	stroke: none;
+	transform-origin: 50%;
+	transition: transform 500ms cubic-bezier(.4, 0, .2, 1);
+}
+.stl-social-links .stl-sl-bubble .line1 { stroke-dasharray: 60 90; stroke-dashoffset: -20; }
+.stl-social-links .stl-sl-bubble .line2 { stroke-dasharray: 67 87; stroke-dashoffset: -18; }
+
+.stl-social-links .stl-sl-radial.is-active .stl-sl-bubble-shape { transform: translateX(24px) translateY(4px) rotate(45deg); }
+.stl-social-links .stl-sl-radial.is-active .stl-sl-bubble .line1 { stroke-dashoffset: 21; }
+.stl-social-links .stl-sl-radial.is-active .stl-sl-bubble .line2 { stroke-dashoffset: 30; }
+.stl-social-links .stl-sl-radial.is-active .stl-sl-bubble .stl-sl-dot { transform: scale(0); }
+
+/* =====================================================================
+ * Empty state (editor preview when no items are configured)
+ * ===================================================================== */
+.stl-social-links .stl-sl-empty {
+	text-align: center;
+	color: #999;
+	font-style: italic;
+	padding: 40px 0;
+}

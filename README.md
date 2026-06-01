@@ -12,6 +12,8 @@ A growing collection of Elementor widgets by [Stallioni](https://stallioni.com) 
 | **Founder Section** | Editorial cover layout — photo on the left, name / role / bio / quote / tags on the right, over a dark card with accent details. |
 | **Button** | Two animated button styles: a layered "push" effect (Style 1) and a bordered "frame draw" effect (Style 2). Renders as `<a>` or `<button>` based on whether a link is supplied. |
 | **Timeline** | Vertical alternating timeline with year, title, description, and circular media per milestone. Accent color is scoped per-widget so multiple timelines on a page can have different colors. |
+| **Form Tabs** | Tabbed selector that swaps between forms rendered by another plugin (Contact Form 7, WPForms, Gravity Forms, etc.) via shortcode. Each tab is a card with icon, title, meta line, and description; clicking reveals its matching form panel. Per-tab On-Click JavaScript hook for custom loaders. |
+| **Social Links** | Floating social-icon block in two styles: a sliding edge **rail** (left or right) with hover slide-out, or a **radial FAB** at a screen corner that fans icons out in a quarter arc on click. Accessible (aria-expanded, outside-click + Escape close). |
 
 All widgets live in the **Stl Addons** category of the Elementor panel and offer full control over typography, colors, spacing, and dividers via the Style tab.
 
@@ -81,7 +83,7 @@ Theming & icons:
 - **Memoized widget discovery.** `STL_Addons_Plugin::discover_widgets()` runs `glob()` once per request and caches the result in a static — multiple hook callbacks (`register_assets`, `register_widgets`, the inline-CSS filter) share the same list.
 - **Image attributes.** Attachment images use Elementor's `Group_Control_Image_Size::get_attachment_image_html()` (responsive `srcset` + intrinsic `width`/`height`). Fallback `<img>` tags carry `loading="lazy"` + `decoding="async"`.
 - **CSS variables scoped per widget.** The Timeline accent color (`--stl-timeline-accent`) and the Button's offset (`--stl-btn-offset-*`) live on the widget wrapper, not on `:root`, so multiple instances coexist without color or spacing leaks.
-- **Zero front-end JavaScript.** All widget interactions (hover lift, frame draw, layer push) are pure CSS.
+- **Per-widget JS, only when used.** Widgets that need behavior (Form Tabs' card switching, Social Links' radial trigger) declare `get_script_depends()` so their tiny `script.js` only loads on pages that render the widget. Static widgets (Button, Timeline, Team Grid, Founder Section) ship no JS at all.
 
 ---
 
@@ -107,15 +109,27 @@ stl-addons/
         ├── timeline/
         │   ├── widget.php        ← class STL_Widget_Timeline
         │   ├── icon.svg
-        │   └── assets/style.css  ← auto-registered as handle `stl-timeline`
+        │   └── assets/style.css
         ├── team-grid/
         │   ├── widget.php        ← class STL_Widget_Team_Grid
         │   ├── icon.svg
-        │   └── assets/style.css  ← auto-registered as handle `stl-team-grid`
-        └── founder-section/
-            ├── widget.php        ← class STL_Widget_Founder_Section
+        │   └── assets/style.css
+        ├── founder-section/
+        │   ├── widget.php        ← class STL_Widget_Founder_Section
+        │   ├── icon.svg
+        │   └── assets/style.css
+        ├── form-tabs/
+        │   ├── widget.php        ← class STL_Widget_Form_Tabs
+        │   ├── icon.svg
+        │   └── assets/
+        │       ├── style.css
+        │       └── script.js     ← tab switching, also auto-registered as `stl-form-tabs`
+        └── social-links/
+            ├── widget.php        ← class STL_Widget_Social_Links
             ├── icon.svg
-            └── assets/style.css  ← auto-registered as handle `stl-founder-section`
+            └── assets/
+                ├── style.css
+                └── script.js     ← radial trigger open/close
 ```
 
 ### Adding a new widget
@@ -126,8 +140,11 @@ The plugin auto-loads anything under `includes/widgets/`. No edits to `plugin.ph
 2. Define `STL_Widget_<Studly_Snake>` extending `\Elementor\Widget_Base`.
 3. Set `get_name()` → `stl_<snake>`, `get_categories()` → include `'stl-addons'`, `get_style_depends()` → `array( 'stl-<slug>' )` if you ship CSS.
 4. Optionally drop `includes/widgets/<slug>/assets/style.css` (auto-registered as `stl-<slug>`).
-5. Optionally drop `includes/widgets/<slug>/icon.svg` — the admin dashboard will inline it with sanitization.
-6. Add `stl-widget` to the outermost element in `render()` (or via `get_html_wrapper_class()`) so the shared box-sizing reset applies.
+5. Optionally drop `includes/widgets/<slug>/assets/script.js` (auto-registered as `stl-<slug>`) and declare `get_script_depends() → array( 'stl-<slug>' )` so it loads only when the widget is on the page.
+6. Optionally drop `includes/widgets/<slug>/icon.svg` — the admin dashboard will inline it with sanitization.
+7. Add `stl-widget` to the outermost element in `render()` (or via `get_html_wrapper_class()`) so the shared box-sizing reset applies.
+
+For deeper patterns — optimized DOM (`has_widget_inner_wrapper` / `get_html_wrapper_class`), controls organization, the "no defaults on style controls" rule, render hygiene, and i18n — see [CONVENTIONS.md](CONVENTIONS.md).
 
 ### Conventions
 
