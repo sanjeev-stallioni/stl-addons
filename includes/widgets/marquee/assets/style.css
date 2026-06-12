@@ -1,0 +1,113 @@
+/**
+ * Marquee widget — pure-CSS seamless ticker.
+ *
+ * The track is exactly two identical groups wide; animating it by translateX(-50%)
+ * scrolls one full group out of view as the second slides in, so the loop never
+ * jumps. Spacing is carried by the items (margin + the ::after separator) rather
+ * than a flex gap, which keeps the period uniform across the group boundary.
+ *
+ * Values here are visual baselines drawn from hyun-engines-redesign.html. Every
+ * one is overridable from the Style tab (Elementor injects control CSS with higher
+ * specificity), so none of these are hard defaults on the controls themselves.
+ */
+
+.stl-mq {
+	/* Per-instance tokens — overridden by the controls on {{WRAPPER}} .stl-mq. */
+	--stl-mq-gap: 48px;
+	--stl-mq-sep: "\25CF"; /* ● */
+	--stl-mq-sep-color: #E8431B;
+
+	position: relative;
+	overflow: hidden;
+	background: #0b0c0e;
+	border-block: 1px solid #2E333B;
+}
+
+.stl-mq-track {
+	display: flex;
+	width: max-content;
+	padding-block: 16px;
+	animation: stl-mq-scroll 26s linear infinite;
+	will-change: transform;
+}
+
+.stl-mq-group {
+	display: flex;
+	flex: none;
+}
+
+.stl-mq-item {
+	display: inline-flex;
+	align-items: center;
+	margin-inline-end: var(--stl-mq-gap);
+	white-space: nowrap;
+	font-weight: 700;
+	font-size: 0.92rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: #9AA1AB;
+	text-decoration: none;
+}
+
+a.stl-mq-item {
+	transition: color 0.2s ease;
+}
+
+a.stl-mq-item:hover {
+	color: #fff;
+}
+
+/* Separator dot — sits in the gap after each item, accent-coloured. */
+.stl-mq-item::after {
+	content: var(--stl-mq-sep);
+	margin-inline-start: var(--stl-mq-gap);
+	color: var(--stl-mq-sep-color);
+	font-size: 0.6em;
+	line-height: 1;
+}
+
+.stl-mq--no-sep .stl-mq-item::after {
+	content: none;
+}
+
+/* Direction: reverse plays the same keyframe backwards → scrolls right. */
+.stl-mq--right .stl-mq-track {
+	animation-direction: reverse;
+}
+
+.stl-mq--pause:hover .stl-mq-track {
+	animation-play-state: paused;
+}
+
+/* Full-bleed: break out of the column to span the viewport. */
+.stl-mq--full {
+	width: 100vw;
+	max-width: 100vw;
+	margin-inline-start: calc(50% - 50vw);
+}
+
+@keyframes stl-mq-scroll {
+	from { transform: translateX(0); }
+	to   { transform: translateX(-50%); }
+}
+
+/* Respect users who ask for less motion: stop the scroll, drop the duplicate,
+   and let the (now static) strip scroll manually if it overflows. */
+@media (prefers-reduced-motion: reduce) {
+	.stl-mq {
+		overflow-x: auto;
+	}
+	.stl-mq-track {
+		animation: none;
+	}
+	.stl-mq-group + .stl-mq-group {
+		display: none;
+	}
+}
+
+.stl-mq-empty {
+	margin: 0;
+	padding: 12px 16px;
+	font-size: 0.85rem;
+	color: #888;
+}

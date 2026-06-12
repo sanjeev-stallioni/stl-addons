@@ -14,6 +14,7 @@ A growing collection of Elementor widgets by [Stallioni](https://stallioni.com) 
 | **Timeline** | Vertical alternating timeline with year, title, description, and circular media per milestone. Accent color is scoped per-widget so multiple timelines on a page can have different colors. |
 | **Form Tabs** | Tabbed selector that swaps between forms rendered by another plugin (Contact Form 7, WPForms, Gravity Forms, etc.) via shortcode. Each tab is a card with icon, title, meta line, and description; clicking reveals its matching form panel. Per-tab On-Click JavaScript hook for custom loaders. |
 | **Social Links** | Floating social-icon block in two styles: a sliding edge **rail** (left or right) with hover slide-out, or a **radial FAB** at a screen corner that fans icons out in a quarter arc on click. Accessible (aria-expanded, outside-click + Escape close). |
+| **Marquee** | Seamless horizontally-scrolling keyword strip (ticker). Pure-CSS animation (no JS), perfectly looped via a duplicated aria-hidden copy. Per-item optional links, configurable direction, speed, separator, pause-on-hover, and an opt-in full-viewport-width breakout. Honours `prefers-reduced-motion`. |
 
 All widgets live in the **Stl Addons** category of the Elementor panel and offer full control over typography, colors, spacing, and dividers via the Style tab.
 
@@ -124,12 +125,16 @@ stl-addons/
         │   └── assets/
         │       ├── style.css
         │       └── script.js     ← tab switching, also auto-registered as `stl-form-tabs`
-        └── social-links/
-            ├── widget.php        ← class STL_Widget_Social_Links
+        ├── social-links/
+        │   ├── widget.php        ← class STL_Widget_Social_Links
+        │   ├── icon.svg
+        │   └── assets/
+        │       ├── style.css
+        │       └── script.js     ← radial trigger open/close
+        └── marquee/
+            ├── widget.php        ← class STL_Widget_Marquee
             ├── icon.svg
-            └── assets/
-                ├── style.css
-                └── script.js     ← radial trigger open/close
+            └── assets/style.css  ← seamless CSS ticker (no JS)
 ```
 
 ### Adding a new widget
