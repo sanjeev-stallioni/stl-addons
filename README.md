@@ -15,6 +15,8 @@ A growing collection of Elementor widgets by [Stallioni](https://stallioni.com) 
 | **Form Tabs** | Tabbed selector that swaps between forms rendered by another plugin (Contact Form 7, WPForms, Gravity Forms, etc.) via shortcode. Each tab is a card with icon, title, meta line, and description; clicking reveals its matching form panel. Per-tab On-Click JavaScript hook for custom loaders. |
 | **Social Links** | Floating social-icon block in two styles: a sliding edge **rail** (left or right) with hover slide-out, or a **radial FAB** at a screen corner that fans icons out in a quarter arc on click. Accessible (aria-expanded, outside-click + Escape close). |
 | **Marquee** | Seamless horizontally-scrolling keyword strip (ticker). Pure-CSS animation (no JS), perfectly looped via a duplicated aria-hidden copy. Per-item optional links, configurable direction, speed, separator, pause-on-hover, and an opt-in full-viewport-width breakout. Honours `prefers-reduced-motion`. |
+| **Review Grid** | Responsive grid of customer review cards — star rating, review body (`<blockquote>`), and an author line with an avatar (image or auto-generated initial on a gradient circle). Accessible star rating (`role="img"` + aria-label), semantic `<cite>` author, and an opt-in schema.org/Review microdata switch for richer SEO. Star color and avatar gradient are scoped per-widget. No JS. |
+| **Post Grid** | Live blog-card grid pulled from `WP_Query` — featured image, date (`<time>`), title, excerpt, and "read article" link. Full query controls (post type, categories, tags with AND/OR match), friendly ordering presets (Newest/Oldest First, A→Z, Most Commented, Random…), post count, offset, exclude-current and ignore-sticky. Per-breakpoint column control, selectable title heading level, and an optional accessible client-side **category filter bar** (all posts stay in the DOM for SEO). Opt-in schema.org/BlogPosting microdata. |
 
 All widgets live in the **Stl Addons** category of the Elementor panel and offer full control over typography, colors, spacing, and dividers via the Style tab.
 
@@ -75,10 +77,23 @@ Theming & icons:
 ## Performance
 
 - **Per-widget CSS, only when used.** Each widget declares `get_style_depends()`, so Elementor enqueues a widget's stylesheet only on pages where that widget actually renders.
-- **Inline CSS — no render-blocking requests.** A `style_loader_tag` filter rewrites every `stl-*` `<link>` tag into an inline `<style>` block at print time. Each widget CSS is 2–4 KB, so the inline cost is bounded and the LCP win from skipping the HTTP roundtrip is real. Disabled inside the Elementor editor (the editor reloads CSS on edits and needs the registered handle). Turn it off globally with:
+- **Inline CSS — no render-blocking requests.** A `style_loader_tag` filter rewrites every `stl-*` `<link>` tag into an inline `<style>` block at print time. Each widget CSS is 2–4 KB, so the inline cost is bounded and the LCP win from skipping the HTTP roundtrip is real.
+
+  This is why "View Source" on a published page shows the widget styles printed in the page (e.g. `<style id="stl-post-grid-inline-css">…</style>`) instead of an external `<link>` — that is the intended, optimized output, and it applies to every plugin widget on the page. Inlining is **skipped inside the Elementor editor** (the editor reloads CSS on edits and needs the registered handle to stay a real stylesheet), so to see the difference, view-source the published/preview page, not the editor.
+
+  **Don't want inlining?** Serve the widget CSS as normal external files instead. Globally:
 
   ```php
+  // Turn off inlining for all stl-addons widgets — emits <link> tags as usual.
   add_filter( 'stl_addons_inline_widget_css', '__return_false' );
+  ```
+
+  Or per handle, to keep inlining for everything except one widget (the filter receives the registered handle as its 2nd argument):
+
+  ```php
+  add_filter( 'stl_addons_inline_widget_css', function ( $inline, $handle ) {
+      return 'stl-post-grid' === $handle ? false : $inline; // external file for Post Grid only
+  }, 10, 2 );
   ```
 
 - **Memoized widget discovery.** `STL_Addons_Plugin::discover_widgets()` runs `glob()` once per request and caches the result in a static — multiple hook callbacks (`register_assets`, `register_widgets`, the inline-CSS filter) share the same list.
@@ -131,10 +146,14 @@ stl-addons/
         │   └── assets/
         │       ├── style.css
         │       └── script.js     ← radial trigger open/close
-        └── marquee/
-            ├── widget.php        ← class STL_Widget_Marquee
+        ├── marquee/
+        │   ├── widget.php        ← class STL_Widget_Marquee
+        │   ├── icon.svg
+        │   └── assets/style.css  ← seamless CSS ticker (no JS)
+        └── review-grid/
+            ├── widget.php        ← class STL_Widget_Review_Grid
             ├── icon.svg
-            └── assets/style.css  ← seamless CSS ticker (no JS)
+            └── assets/style.css
 ```
 
 ### Adding a new widget
