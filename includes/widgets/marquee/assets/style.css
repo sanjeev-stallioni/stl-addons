@@ -1,45 +1,57 @@
 /**
  * Marquee widget — pure-CSS seamless ticker.
  *
- * The track is exactly two identical groups wide; animating it by translateX(-50%)
- * scrolls one full group out of view as the second slides in, so the loop never
- * jumps. Spacing is carried by the items (margin + the ::after separator) rather
- * than a flex gap, which keeps the period uniform across the group boundary.
+ * Seamless-loop strategy (the proven inline-block technique):
  *
- * Values here are visual baselines drawn from hyun-engines-redesign.html. Every
- * one is overridable from the Style tab (Elementor injects control CSS with higher
+ *   - The strip holds two identical inline-block groups; the second is aria-hidden.
+ *   - Each group is shrink-to-content (inline-block, no stretching). Both animate
+ *     by translateX(-100%) — exactly one group's own width — so group 2 slides into
+ *     the spot group 1 just vacated. No jump.
+ *   - Spacing is carried by item margins, NOT a flex gap. Each item has
+ *     `--stl-mq-gap / 2` on both sides, so item↔item *and* the group↔group seam both
+ *     resolve to one full `--stl-mq-gap`. The rhythm is uniform across the join —
+ *     no tight or loose seam.
+ *   - `font-size: 0` on the wrapper collapses the whitespace between the two
+ *     inline-block groups; without it `-100%` would be a few px short and the loop
+ *     would drift. Items restore their own font-size.
+ *
+ * Caveat: like every duplicate-and-translate marquee, this is seamless only while
+ * one group is at least as wide as the band. With very few/short items a single
+ * wider gap appears before the repeat — add items to fill the width.
+ *
+ * Values here are visual baselines drawn from hyun-engines-redesign.html. Every one
+ * is overridable from the Style tab (Elementor injects control CSS with higher
  * specificity), so none of these are hard defaults on the controls themselves.
  */
 
 .stl-mq {
 	/* Per-instance tokens — overridden by the controls on {{WRAPPER}} .stl-mq. */
-	--stl-mq-gap: 48px;
+	--stl-mq-gap: 48px;             /* space between items (and at the seam)    */
+	--stl-mq-sep-gap: var(--stl-mq-gap); /* space between text and its separator */
 	--stl-mq-sep: "\25CF"; /* ● */
 	--stl-mq-sep-color: #E8431B;
 
 	position: relative;
 	overflow: hidden;
+	white-space: nowrap;
+	font-size: 0; /* collapses inline-block whitespace between the two groups */
+	padding-block: 16px;
 	background: #0b0c0e;
 	border-block: 1px solid #2E333B;
 }
 
-.stl-mq-track {
-	display: flex;
-	width: max-content;
-	padding-block: 16px;
+.stl-mq-group {
+	display: inline-block;
+	vertical-align: middle;
 	animation: stl-mq-scroll 26s linear infinite;
 	will-change: transform;
-}
-
-.stl-mq-group {
-	display: flex;
-	flex: none;
 }
 
 .stl-mq-item {
 	display: inline-flex;
 	align-items: center;
-	margin-inline-end: var(--stl-mq-gap);
+	gap: var(--stl-mq-sep-gap);
+	margin-inline: calc(var(--stl-mq-gap) / 2);
 	white-space: nowrap;
 	font-weight: 700;
 	font-size: 0.92rem;
@@ -57,10 +69,9 @@ a.stl-mq-item:hover {
 	color: #fff;
 }
 
-/* Separator dot — sits in the gap after each item, accent-coloured. */
+/* Separator dot — the item's own gap (--stl-mq-sep-gap) spaces it from the text. */
 .stl-mq-item::after {
 	content: var(--stl-mq-sep);
-	margin-inline-start: var(--stl-mq-gap);
 	color: var(--stl-mq-sep-color);
 	font-size: 0.6em;
 	line-height: 1;
@@ -71,11 +82,11 @@ a.stl-mq-item:hover {
 }
 
 /* Direction: reverse plays the same keyframe backwards → scrolls right. */
-.stl-mq--right .stl-mq-track {
+.stl-mq--right .stl-mq-group {
 	animation-direction: reverse;
 }
 
-.stl-mq--pause:hover .stl-mq-track {
+.stl-mq--pause:hover .stl-mq-group {
 	animation-play-state: paused;
 }
 
@@ -88,7 +99,7 @@ a.stl-mq-item:hover {
 
 @keyframes stl-mq-scroll {
 	from { transform: translateX(0); }
-	to   { transform: translateX(-50%); }
+	to   { transform: translateX(-100%); }
 }
 
 /* Respect users who ask for less motion: stop the scroll, drop the duplicate,
@@ -97,7 +108,7 @@ a.stl-mq-item:hover {
 	.stl-mq {
 		overflow-x: auto;
 	}
-	.stl-mq-track {
+	.stl-mq-group {
 		animation: none;
 	}
 	.stl-mq-group + .stl-mq-group {

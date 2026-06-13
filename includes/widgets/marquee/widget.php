@@ -149,7 +149,7 @@ class STL_Widget_Marquee extends Widget_Base {
 			'range'       => array( 's' => array( 'min' => 4, 'max' => 120, 'step' => 1 ) ),
 			'description'  => __( 'Lower = faster scroll. Leave blank for the default (26s).', 'stl-addons' ),
 			'selectors'   => array(
-				'{{WRAPPER}} .stl-mq-track' => 'animation-duration: {{SIZE}}s;',
+				'{{WRAPPER}} .stl-mq-group' => 'animation-duration: {{SIZE}}s;',
 			),
 		) );
 
@@ -211,7 +211,7 @@ class STL_Widget_Marquee extends Widget_Base {
 				'rem' => array( 'min' => 0, 'max' => 6 ),
 			),
 			'selectors'  => array(
-				'{{WRAPPER}} .stl-mq-track' => 'padding-block: {{SIZE}}{{UNIT}};',
+				'{{WRAPPER}} .stl-mq' => 'padding-block: {{SIZE}}{{UNIT}};',
 			),
 		) );
 
@@ -285,6 +285,23 @@ class STL_Widget_Marquee extends Widget_Base {
 			),
 		) );
 
+		// Space between the text and its separator dot. Independent from "Gap
+		// Between Items" so you can tighten the dot to the text (text ● — text).
+		$this->add_responsive_control( 'separator_spacing', array(
+			'label'       => __( 'Spacing (text ↔ separator)', 'stl-addons' ),
+			'type'        => Controls_Manager::SLIDER,
+			'size_units'  => array( 'px', 'em', 'rem' ),
+			'range'       => array(
+				'px'  => array( 'min' => 0, 'max' => 120, 'step' => 1 ),
+				'em'  => array( 'min' => 0, 'max' => 8, 'step' => 0.1 ),
+				'rem' => array( 'min' => 0, 'max' => 8, 'step' => 0.1 ),
+			),
+			'description' => __( 'Leave blank to match the item gap.', 'stl-addons' ),
+			'selectors'   => array(
+				'{{WRAPPER}} .stl-mq' => '--stl-mq-sep-gap: {{SIZE}}{{UNIT}};',
+			),
+		) );
+
 		$this->end_controls_section();
 	}
 
@@ -318,30 +335,28 @@ class STL_Widget_Marquee extends Widget_Base {
 		}
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
-			<div class="stl-mq-track">
-				<?php for ( $copy = 0; $copy < 2; $copy++ ) : ?>
-					<div class="stl-mq-group"<?php echo 0 === $copy ? '' : ' aria-hidden="true"'; ?>>
-						<?php foreach ( $items as $item ) :
-							$text = $item['text'] ?? '';
-							$url  = $item['link']['url'] ?? '';
-							if ( $url ) :
-								$rel    = ! empty( $item['link']['nofollow'] ) ? 'nofollow' : '';
-								$target = ! empty( $item['link']['is_external'] ) ? '_blank' : '';
-								if ( '_blank' === $target ) {
-									$rel = trim( $rel . ' noopener' );
-								}
-								?>
-								<a class="stl-mq-item" href="<?php echo esc_url( $url ); ?>"<?php
-									echo $target ? ' target="' . esc_attr( $target ) . '"' : '';
-									echo $rel ? ' rel="' . esc_attr( $rel ) . '"' : '';
-								?>><?php echo esc_html( $text ); ?></a>
-							<?php else : ?>
-								<span class="stl-mq-item"><?php echo esc_html( $text ); ?></span>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-				<?php endfor; ?>
-			</div>
+			<?php for ( $copy = 0; $copy < 2; $copy++ ) : ?>
+				<div class="stl-mq-group"<?php echo 0 === $copy ? '' : ' aria-hidden="true"'; ?>>
+					<?php foreach ( $items as $item ) :
+						$text = $item['text'] ?? '';
+						$url  = $item['link']['url'] ?? '';
+						if ( $url ) :
+							$rel    = ! empty( $item['link']['nofollow'] ) ? 'nofollow' : '';
+							$target = ! empty( $item['link']['is_external'] ) ? '_blank' : '';
+							if ( '_blank' === $target ) {
+								$rel = trim( $rel . ' noopener' );
+							}
+							?>
+							<a class="stl-mq-item" href="<?php echo esc_url( $url ); ?>"<?php
+								echo $target ? ' target="' . esc_attr( $target ) . '"' : '';
+								echo $rel ? ' rel="' . esc_attr( $rel ) . '"' : '';
+							?>><?php echo esc_html( $text ); ?></a>
+						<?php else : ?>
+							<span class="stl-mq-item"><?php echo esc_html( $text ); ?></span>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</div>
+			<?php endfor; ?>
 		</div>
 		<?php
 	}
