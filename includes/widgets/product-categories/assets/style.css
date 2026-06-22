@@ -1,0 +1,137 @@
+/* Stl Addons — Product Categories frontend styles.
+ *
+ * Reproduces the Hyun Engines category sidebar panel (list) plus an optional
+ * thumbnail grid. The accent color is a wrapper-scoped CSS variable so the
+ * per-instance Accent control never bleeds into other instances. Visual
+ * baselines live here; Elementor controls override them at higher specificity.
+ */
+
+.stl-pc-section {
+	--stl-pc-accent: #e8431b;
+	--stl-pc-ink: #0e0f11;
+	--stl-pc-paper-2: #eae5db;
+}
+
+/* ---------- Panel ---------- */
+.stl-pc-panel {
+	background: #fff;
+	border: 1px solid #e7e2d7;
+	border-radius: 14px;
+	padding: 20px;
+}
+
+.stl-pc-heading {
+	font-weight: 700;
+	font-size: 0.82rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	margin: 0 0 14px;
+	color: var(--stl-pc-ink);
+}
+
+/* ---------- List (sidebar) ---------- */
+.stl-pc-list {
+	display: flex;
+	flex-direction: column;
+}
+
+.stl-pc-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+	padding: 9px 12px;
+	border-radius: 8px;
+	font-size: 0.92rem;
+	font-weight: 500;
+	color: var(--stl-pc-ink);
+	text-decoration: none;
+	transition: 0.18s ease;
+}
+
+.stl-pc-item:hover,
+.stl-pc-item.is-active {
+	background: var(--stl-pc-paper-2);
+}
+
+.stl-pc-item.is-active {
+	color: var(--stl-pc-accent);
+	font-weight: 700;
+}
+
+.stl-pc-count {
+	background: var(--stl-pc-ink);
+	color: #fff;
+	font-size: 0.72rem;
+	font-weight: 700;
+	line-height: 1.4;
+	border-radius: 6px;
+	padding: 2px 8px;
+	flex: none;
+}
+
+/* ---------- Grid (thumbnails) ---------- */
+.stl-pc-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.stl-pc-tile {
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border: 1px solid #e7e2d7;
+	border-radius: 14px;
+	overflow: hidden;
+	text-decoration: none;
+	color: var(--stl-pc-ink);
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.stl-pc-tile:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.3);
+	border-color: var(--stl-pc-accent);
+}
+
+.stl-pc-tile-img {
+	display: block;
+	aspect-ratio: 1 / 1;
+	background: #f7f4ee;
+	overflow: hidden;
+}
+
+.stl-pc-tile-img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.stl-pc-tile-name {
+	font-weight: 700;
+	font-size: 0.92rem;
+	line-height: 1.3;
+	padding: 12px 14px 4px;
+}
+
+.stl-pc-tile-count {
+	font-size: 0.76rem;
+	color: #8a8f98;
+	padding: 0 14px 14px;
+}
+
+/* ---------- Empty ---------- */
+.stl-pc-empty {
+	color: #999;
+	font-style: italic;
+	padding: 16px 0;
+}
+
+/* ---------- Responsive baselines (overridable per breakpoint) ---------- */
+@media (max-width: 620px) {
+	.stl-pc-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}

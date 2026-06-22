@@ -1,0 +1,389 @@
+/* Stl Addons — Product Tabs frontend styles.
+ *
+ * Reproduces the dark Hyun Engines single-product tab section (Description /
+ * Specifications / Reviews / Shipping & Returns + FAQ). Visual baselines live
+ * here; Elementor controls override them at higher specificity.
+ */
+
+.stl-pt-section {
+	--stl-pt-ink: #0e0f11;
+	--stl-pt-graphite: #16191d;
+	--stl-pt-line: #2e333b;
+	--stl-pt-fog: #9aa1ab;
+	--stl-pt-cloud: #e9e7e2;
+	--stl-pt-accent: #e8431b;
+	--stl-pt-accent-2: #ff6a3d;
+	background: var(--stl-pt-ink);
+	color: #fff;
+	padding: 56px 0;
+}
+
+/* ---------- Tab nav ---------- */
+.stl-pt-nav {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	border-bottom: 1px solid var(--stl-pt-line);
+	margin-bottom: 30px;
+}
+
+.stl-pt-nav button.stl-pt-btn {
+	background: none;
+	border: none;
+	color: var(--stl-pt-fog);
+	font-weight: 700;
+	font-size: 0.9rem;
+	letter-spacing: 0.04em;
+	padding: 14px 20px;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	margin-bottom: -1px;
+	transition: 0.2s ease;
+	box-shadow: none;
+    border-radius: 0;
+    text-transform: none;
+}
+
+.stl-pt-nav button.stl-pt-btn:hover {
+	color: #fff;
+	background: none;
+}
+
+.stl-pt-nav .stl-pt-btn.is-on {
+	color: #fff;
+	border-bottom-color: var(--stl-pt-accent);
+}
+.stl-pt-nav .stl-pt-btn:focus {
+	background: transparent;
+}
+
+/* ---------- Panes ---------- */
+.stl-pt-pane {
+	display: none;
+}
+
+.stl-pt-pane.is-on {
+	display: block;
+}
+
+.stl-pt-panes .stl-pt-pane h2,
+.stl-pt-panes .stl-pt-pane h3 {
+	font-size: 1.6rem;
+	font-weight: 800;
+	margin: 26px 0 14px;
+	color: #fff;
+}
+
+.stl-pt-panes .stl-pt-pane h2:first-child,
+.stl-pt-panes .stl-pt-pane h3:first-child {
+	margin-top: 0;
+}
+
+.stl-pt-panes .stl-pt-pane p {
+	color: var(--stl-pt-cloud);
+	margin-bottom: 14px;
+}
+
+.stl-pt-panes .stl-pt-pane a {
+	color: var(--stl-pt-accent-2);
+}
+
+.stl-pt-panes .stl-pt-pane ul {
+	color: var(--stl-pt-cloud);
+	margin: 0 0 16px 2px;
+	list-style: none;
+	display: grid;
+	gap: 8px;
+	padding: 0;
+}
+
+.stl-pt-panes .stl-pt-pane ul li {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+}
+
+.stl-pt-pane ul li::before {
+	content: "\203A";
+	color: var(--stl-pt-accent-2);
+	font-weight: 800;
+	flex: none;
+}
+
+.stl-pt-pane hr,
+.stl-pt-pane .divline {
+	border: none;
+	border-top: 1px solid var(--stl-pt-line);
+	margin: 26px 0;
+}
+
+.stl-pt-empty {
+	color: var(--stl-pt-fog);
+}
+
+/* ---------- Specifications table ---------- */
+.stl-pt-spec {
+	width: 100%;
+	border-collapse: collapse;
+	background: var(--stl-pt-graphite);
+	border: 1px solid var(--stl-pt-line);
+	border-radius: 12px;
+	overflow: hidden;
+	margin: 8px 0 18px;
+}
+
+.stl-pt-spec td {
+	padding: 13px 18px;
+	border-bottom: 1px solid var(--stl-pt-line);
+	font-size: 0.92rem;
+}
+
+.stl-pt-spec tr td:first-child {
+	color: var(--stl-pt-fog);
+	width: 45%;
+	font-weight: 500;
+}
+
+.stl-pt-spec tr td:last-child {
+	color: #fff;
+	font-weight: 600;
+}
+
+.stl-pt-spec tr:last-child td {
+	border-bottom: none;
+}
+
+/* ---------- Built-in FAQ accordion (if static <details> is used) ---------- */
+.stl-pt-pane details {
+	background: var(--stl-pt-graphite);
+	border: 1px solid var(--stl-pt-line);
+	border-radius: 11px;
+	padding: 4px 18px;
+	margin-bottom: 10px;
+}
+
+.stl-pt-pane summary {
+	padding: 14px 0;
+	font-weight: 700;
+	cursor: pointer;
+	color: #fff;
+	list-style: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.stl-pt-pane summary::-webkit-details-marker {
+	display: none;
+}
+
+.stl-pt-pane summary::after {
+	content: "+";
+	color: var(--stl-pt-accent-2);
+	font-size: 1.3rem;
+}
+
+.stl-pt-pane details[open] summary::after {
+	content: "\2013";
+}
+
+.stl-pt-pane details p {
+	padding: 0 0 16px;
+	margin: 0;
+	color: var(--stl-pt-cloud);
+	font-size: 0.92rem;
+}
+
+/* ---------- Shortcode title (Custom tab) ---------- */
+.stl-pt-pane .stl-pt-sc-title {
+	font-size: 1.6rem;
+	font-weight: 800;
+	color: #fff;
+	margin: 26px 0 14px;
+}
+
+/* ---------- Reviews (WooCommerce comments) ---------- */
+.stl-pt-pane #reviews #comments {
+	margin-bottom: 26px;
+}
+
+/* "There are no reviews yet." notice */
+.stl-pt-pane .woocommerce-noreviews {
+	background: var(--stl-pt-graphite);
+	border: 1px solid var(--stl-pt-line);
+	border-left: 3px solid var(--stl-pt-accent);
+	border-radius: 10px;
+	padding: 15px 18px;
+	margin: 0;
+	color: var(--stl-pt-cloud);
+	font-size: 0.92rem;
+}
+
+/* Existing reviews list */
+.stl-pt-pane ol.commentlist {
+	list-style: none;
+	margin: 0 0 26px;
+	padding: 0;
+	display: grid;
+	gap: 14px;
+}
+
+.stl-pt-pane ol.commentlist li {
+	display: block;
+}
+
+.stl-pt-pane .comment_container {
+	display: flex;
+	gap: 14px;
+	background: var(--stl-pt-graphite);
+	border: 1px solid var(--stl-pt-line);
+	border-radius: 12px;
+	padding: 16px 18px;
+}
+
+.stl-pt-pane #reviews #comments ol.commentlist li img.avatar {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	margin: 0;
+	flex: none;
+	position: static;
+	float: inherit;
+	padding: 0;
+	background: inherit;
+	border: none;
+}
+
+.stl-pt-pane #reviews #comments ol.commentlist li .comment-text {
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+	border: none;
+	padding: 0;
+}
+.stl-pt-pane #reviews #comments ol.commentlist li .comment-text p {
+	font-size: 0.86rem;
+}
+.stl-pt-pane #reviews #comments ol.commentlist li .comment-text p:last-child {
+	margin: 0;
+}
+
+.stl-pt-pane .comment-text .meta {
+	color: var(--stl-pt-fog);
+	font-size: 0.82rem;
+	margin: 0 0 8px;
+}
+
+.stl-pt-pane .comment-text .meta strong {
+	color: #fff;
+}
+
+.stl-pt-pane .comment-text .description p:last-child {
+	margin-bottom: 0;
+}
+
+/* Star ratings — both the read-only display and the form picker */
+.stl-pt-pane .star-rating,
+.stl-pt-pane .star-rating span {
+	color: var(--stl-pt-accent-2);
+}
+
+.stl-pt-pane p.stars a::before {
+	color: var(--stl-pt-fog);
+}
+
+.stl-pt-pane p.stars:hover a::before,
+.stl-pt-pane p.stars.selected a.active::before,
+.stl-pt-pane p.stars.selected a:not(.active)::before {
+	color: var(--stl-pt-accent-2);
+}
+
+/* Review form */
+.stl-pt-pane #review_form_wrapper {
+	background: var(--stl-pt-graphite);
+	border: 1px solid var(--stl-pt-line);
+	border-radius: 14px;
+	padding: 22px 24px;
+}
+
+.stl-pt-pane .comment-reply-title {
+	display: block;
+	color: #fff;
+	font-weight: 800;
+	font-size: 1.1rem;
+	margin: 0 0 18px;
+}
+
+.stl-pt-pane .comment-reply-title small a {
+	color: var(--stl-pt-accent-2);
+	font-weight: 500;
+	margin-left: 8px;
+}
+
+.stl-pt-pane .comment-form label {
+	display: block;
+	color: var(--stl-pt-fog);
+	font-size: 0.82rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	margin-bottom: 7px;
+}
+
+.stl-pt-pane .comment-form .required {
+	color: var(--stl-pt-accent);
+}
+
+.stl-pt-pane .comment-form-rating {
+	margin-bottom: 16px;
+}
+
+.stl-pt-pane .comment-form textarea,
+.stl-pt-pane .comment-form input[type="text"],
+.stl-pt-pane .comment-form input[type="email"],
+.stl-pt-pane .comment-form select {
+	width: 100%;
+	background: var(--stl-pt-ink);
+	border: 1px solid var(--stl-pt-line);
+	border-radius: 10px;
+	color: #fff;
+	padding: 12px 14px;
+	font-size: 0.95rem;
+	transition: border-color 0.2s ease;
+	box-sizing: border-box;
+}
+
+.stl-pt-pane .comment-form textarea:focus,
+.stl-pt-pane .comment-form input[type="text"]:focus,
+.stl-pt-pane .comment-form input[type="email"]:focus,
+.stl-pt-pane .comment-form select:focus {
+	border-color: var(--stl-pt-accent);
+	outline: none;
+}
+
+.stl-pt-pane .comment-form textarea::placeholder,
+.stl-pt-pane .comment-form input::placeholder {
+	color: var(--stl-pt-fog);
+}
+
+.stl-pt-pane .comment-form-comment {
+	margin-bottom: 16px;
+}
+
+.stl-pt .stl-pt-pane .form-submit input[type="submit"],
+.stl-pt .stl-pt-pane #review_form_wrapper #review_form #submit {
+	background: var(--stl-pt-accent);
+	color: #fff;
+	border: none;
+	border-radius: 999px;
+	padding: 13px 32px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	cursor: pointer;
+	box-shadow: none;
+	transition: background 0.2s ease;
+}
+
+.stl-pt .stl-pt-pane .form-submit input[type="submit"]:hover,
+.stl-pt .stl-pt-pane #review_form_wrapper #review_form #submit:hover {
+	background: var(--stl-pt-accent-2);
+}

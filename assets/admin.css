@@ -405,6 +405,10 @@
 	color: rgba(226, 232, 240, 0.88);
 }
 
+.stl-style-script-info .stl-list li {
+	color: var(--stl-text);
+}
+
 .stl-dot {
 	width: 6px;
 	height: 6px;
@@ -460,6 +464,27 @@
 	font-size: 12.5px;
 	overflow-x: auto;
 	margin: 8px 0 0 0;
+}
+
+.stl-note {
+	margin: 14px 0 0 0;
+	padding: 12px 14px;
+	background: var(--stl-orange-soft);
+	border-left: 3px solid var(--stl-orange);
+	border-radius: 6px;
+	color: var(--stl-text);
+	font-size: 13px;
+	line-height: 1.55;
+}
+
+.stl-note strong {
+	color: var(--stl-navy);
+}
+
+.stl-code-label {
+	margin: 16px 0 0 0;
+	color: var(--stl-muted);
+	font-size: 12.5px;
 }
 
 .stl-empty {

@@ -242,6 +242,29 @@ final class STL_Addons_Admin {
 					</ol>
 				</div>
 
+				<div class="stl-card stl-style-script-info">
+					<h3><?php esc_html_e( 'How styles & scripts load', 'stl-addons' ); ?></h3>
+					<p><?php esc_html_e( 'Stl Addons is built for speed, so assets load differently from most plugins:', 'stl-addons' ); ?></p>
+					<ul class="stl-list">
+						<li><span class="stl-dot"></span> <?php esc_html_e( 'Only when used — each widget\'s CSS/JS loads solely on pages where that widget actually appears, never sitewide.', 'stl-addons' ); ?></li>
+						<li><span class="stl-dot"></span> <?php esc_html_e( 'Printed inline (internal) — a widget\'s CSS is injected straight into the page as a <style> block instead of a separate file.', 'stl-addons' ); ?></li>
+					</ul>
+					<p class="stl-note">
+						<strong><?php esc_html_e( 'Why inline?', 'stl-addons' ); ?></strong>
+						<?php esc_html_e( 'An external stylesheet is a render-blocking request: the browser must fetch it before it can paint. Each widget stylesheet is tiny (2–4 KB), so inlining it removes a network round-trip from the critical path and improves load time and Core Web Vitals (LCP). Inlining is automatically skipped inside the Elementor editor, so to see it, view the page source on the live/preview page.', 'stl-addons' ); ?>
+					</p>
+
+					<p class="stl-code-label"><?php esc_html_e( 'Prefer external files? Add this to your (child) theme\'s functions.php to load every widget\'s CSS as a normal <link> file instead:', 'stl-addons' ); ?></p>
+					<pre class="stl-code">// Load Stl Addons widget CSS as external files (default is inline).
+add_filter( 'stl_addons_inline_widget_css', '__return_false' );</pre>
+
+					<p class="stl-code-label"><?php esc_html_e( 'Or switch just one widget to an external file and keep the rest inline (the handle is stl-<slug>):', 'stl-addons' ); ?></p>
+					<pre class="stl-code">add_filter( 'stl_addons_inline_widget_css', function ( $inline, $handle ) {
+    return 'stl-post-grid' === $handle ? false : $inline;
+}, 10, 2 );</pre>
+					<p class="stl-card-sub"><?php esc_html_e( 'Note: this filter controls CSS inlining only. Widget JavaScript is always enqueued as a normal external file.', 'stl-addons' ); ?></p>
+				</div>
+
 				<div class="stl-card">
 					<h3><?php esc_html_e( 'Adding a new widget (for developers)', 'stl-addons' ); ?></h3>
 					<p><?php esc_html_e( 'The plugin auto-loads anything under includes/widgets/. Folder slug must be kebab-case and the PHP class must follow the STL_Widget_<Studly_Snake> convention. Drop an icon.svg in the same folder to give it a custom dashboard icon.', 'stl-addons' ); ?></p>

@@ -1,0 +1,374 @@
+/* Stl Addons — Archive Products frontend styles.
+ *
+ * Reproduces the Hyun Engines shop card. The accent color is a wrapper-scoped
+ * CSS variable so the per-instance Accent control never bleeds into other
+ * instances. Visual baselines live here; Elementor controls override them at
+ * higher specificity.
+ */
+
+.stl-ap-section {
+	--stl-ap-accent: #e8431b;
+	--stl-ap-accent-2: #ff6a3d;
+	--stl-ap-ink: #0e0f11;
+	--stl-ap-steel: #23272e;
+	--stl-ap-paper-2: #eae5db;
+	--stl-ap-muted: #525964;
+	--stl-ap-ok: #3ba776;
+}
+
+/* ---------- Toolbar (result count + sorting) ---------- */
+.stl-ap-toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+	margin-bottom: 22px;
+}
+
+.stl-ap-count {
+	margin: 0;
+	font-size: 0.9rem;
+	color: var(--stl-ap-muted);
+}
+
+.stl-ap-ordering {
+	margin: 0;
+}
+
+.stl-ap-ordering select.orderby {
+	font-family: inherit;
+	font-size: 0.88rem;
+	padding: 10px 14px;
+	border: 1px solid #d8d2c6;
+	border-radius: 8px;
+	background: #fff;
+	color: var(--stl-ap-ink);
+	cursor: pointer;
+}
+
+.stl-ap-ordering select.orderby:focus {
+	outline: none;
+	border-color: var(--stl-ap-accent);
+	box-shadow: 0 0 0 3px rgba(232, 67, 27, 0.12);
+}
+
+/* ---------- Grid ---------- */
+.stl-ap-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 22px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.stl-ap-grid::before,
+.stl-ap-grid::after {
+	content: none !important;
+}
+
+/* ---------- Card ---------- */
+div.stl-ap ul.stl-ap-grid li.stl-ap-card {
+	background: #fff;
+	border: 1px solid #e7e2d7;
+	border-radius: 16px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	margin: 0;
+	float: inherit !important;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.stl-ap-card::before {
+	content: none;
+}
+
+.stl-ap-card:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 24px 48px -26px rgba(0, 0, 0, 0.35);
+	border-color: #d8d2c6;
+}
+
+/* ---------- Image ---------- */
+.stl-ap-imgbox {
+	position: relative;
+	background: #f7f4ee;
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+	display: block;
+}
+
+.stl-ap-imgbox img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	margin: 0;
+	transition: transform 0.4s ease;
+}
+
+.stl-ap-sale {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	z-index: 2;
+	background: var(--stl-ap-accent);
+	color: #fff;
+	font-weight: 800;
+	font-size: 0.7rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	padding: 6px 11px;
+	border-radius: 7px;
+}
+
+/* ---------- Body ---------- */
+.stl-ap-body {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.stl-ap-title {
+	font-size: 1.06rem;
+	font-weight: 700;
+	line-height: 1.25;
+	margin: 0 0 10px;
+	min-height: 2.6em;
+}
+
+.stl-ap-title a {
+	color: var(--stl-ap-ink);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.stl-ap-title a:hover {
+	color: var(--stl-ap-accent);
+}
+
+/* ---------- Price ---------- */
+.stl-ap-price {
+	display: flex;
+	align-items: baseline;
+	gap: 9px;
+	margin-bottom: 6px;
+	flex-wrap: wrap;
+}
+
+.stl-ap-price .now {
+	font-weight: 800;
+	font-size: 1.4rem;
+	color: var(--stl-ap-ink);
+}
+
+.stl-ap-price .was {
+	color: #9aa1ab;
+	text-decoration: line-through;
+	font-size: 0.95rem;
+}
+
+.stl-ap-price .now bdi,
+.stl-ap-price .was bdi {
+	text-decoration: inherit;
+}
+
+/* ---------- Shipping note ---------- */
+.stl-ap-ship {
+	font-size: 0.78rem;
+	color: var(--stl-ap-ok);
+	font-weight: 600;
+	margin-bottom: 14px;
+}
+
+/* ---------- Feature list ---------- */
+.stl-ap-feat {
+	list-style: none;
+	display: grid;
+	gap: 6px;
+	margin: 0 0 18px;
+	padding: 0;
+}
+
+.stl-ap-feat li {
+	font-size: 0.8rem;
+	color: var(--stl-ap-muted);
+	display: flex;
+	gap: 7px;
+	align-items: flex-start;
+}
+
+.stl-ap-feat li::before {
+	content: "\2713";
+	color: var(--stl-ap-ok);
+	font-weight: 800;
+	flex: none;
+}
+
+/* ---------- Actions ---------- */
+.stl-ap-actions {
+	margin-top: auto;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 9px;
+	align-items: stretch;
+}
+
+.stl-ap-add,
+.stl-ap-view {
+	font-weight: 700;
+	font-size: 0.76rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	line-height: 1.3;
+	padding: 11px 14px;
+	border-radius: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 9px;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	border: none;
+	transition: 0.2s ease;
+}
+
+.stl-ap-add {
+	order: 1;
+	background: var(--stl-ap-ink);
+	color: #fff;
+}
+
+.stl-ap-add:hover {
+	background: var(--stl-ap-steel);
+	color: #fff;
+}
+
+.stl-ap-view {
+	order: 2;
+	background: transparent;
+	color: var(--stl-ap-ink);
+	border: 1.5px solid #d8d2c6;
+}
+
+.stl-ap-view:hover {
+	border-color: var(--stl-ap-accent);
+	color: var(--stl-ap-accent);
+}
+
+/* AJAX add-to-cart: spinner while in flight + the "View cart" link that follows. */
+.stl-ap-add.loading {
+	color: transparent !important;
+	pointer-events: none;
+	position: relative;
+}
+
+.stl-ap-add.loading::after {
+	content: "" !important;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 15px;
+	height: 15px;
+	margin: -8px 0 0 -8px;
+	border: 2px solid rgba(255, 255, 255, 0.4);
+	border-top-color: #fff;
+	border-radius: 50%;
+	animation: stl-ap-spin 0.6s linear infinite;
+	display: block;
+}
+
+.stl-ap-body .stl-ap-actions .added_to_cart {
+	order: 3;
+	grid-column: 1 / -1;
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	padding: 9px 14px;
+	border-radius: 8px;
+	border: 1.5px solid var(--stl-ap-accent);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--stl-ap-accent);
+	text-decoration: none;
+	transition: 0.2s ease;
+}
+
+.stl-ap-actions .added_to_cart:hover {
+	background: var(--stl-ap-accent);
+	color: #fff;
+}
+
+@keyframes stl-ap-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* ---------- Pagination ---------- */
+.stl-ap-pagination {
+	margin-top: 48px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: center;
+}
+
+.stl-ap-pagination .page-numbers {
+	min-width: 42px;
+	height: 42px;
+	display: inline-grid;
+	place-items: center;
+	padding: 0 10px;
+	border-radius: 9px;
+	border: 1px solid #d8d2c6;
+	background: #fff;
+	color: var(--stl-ap-ink);
+	font-weight: 700;
+	line-height: 1;
+	text-decoration: none;
+	transition: 0.18s ease;
+}
+
+.stl-ap-pagination a.page-numbers:hover {
+	border-color: var(--stl-ap-accent);
+	color: var(--stl-ap-accent);
+}
+
+.stl-ap-pagination .page-numbers.current {
+	background: var(--stl-ap-ink);
+	color: #fff;
+	border-color: var(--stl-ap-ink);
+}
+
+/* ---------- Empty ---------- */
+.stl-ap-empty {
+	text-align: center;
+	color: #999;
+	font-style: italic;
+	padding: 40px 0;
+}
+
+/* ---------- Responsive baselines (overridable per breakpoint) ---------- */
+@media (max-width: 1024px) {
+	.stl-ap-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 620px) {
+	.stl-ap-grid {
+		grid-template-columns: 1fr;
+	}
+}

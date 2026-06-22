@@ -1,0 +1,196 @@
+/* Stl Addons — Featured Post frontend styles.
+ *
+ * Mirrors the dark editorial "feat" card. Colors are exposed as wrapper-scoped
+ * CSS variables so per-instance color controls never bleed into other instances
+ * on the same page. Visual baselines live here; Elementor controls override them
+ * at higher specificity.
+ */
+
+.stl-fp-section {
+	--stl-fp-accent: #E8431B;
+	--stl-fp-accent-2: #FF6A3D;
+	--stl-fp-card: #16191D;
+	--stl-fp-line: #2E333B;
+	--stl-fp-text: #ffffff;
+	--stl-fp-cloud: #E9E7E2;
+	--stl-fp-muted: #9AA1AB;
+	padding: 64px 0 8px;
+}
+
+.stl-fp-list {
+	display: grid;
+	gap: 28px;
+}
+
+/* ---------- Card ---------- */
+.stl-fp {
+	display: grid;
+	grid-template-columns: 1.05fr 0.95fr;
+	background: var(--stl-fp-card);
+	border: 1px solid var(--stl-fp-line);
+	border-radius: 18px;
+	overflow: hidden;
+	text-decoration: none;
+	color: var(--stl-fp-text);
+	transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+}
+
+.stl-fp:hover {
+	border-color: var(--stl-fp-accent);
+	transform: translateY(-4px);
+}
+
+/* Media on the right: flip the two columns. */
+.stl-fp--media-right .stl-fp-ph {
+	order: 2;
+}
+
+/* ---------- Media panel ---------- */
+.stl-fp-ph {
+	position: relative;
+	min-height: 340px;
+	overflow: hidden;
+	background: linear-gradient(150deg, #23272e, #0e0f11);
+}
+
+/* Decorative gear + accent wash — only on the empty (no image) placeholder. */
+.stl-fp-ph:not(.has-img)::before {
+	content: "\2699";
+	position: absolute;
+	right: -18px;
+	bottom: -40px;
+	font-size: 14rem;
+	line-height: 1;
+	color: #fff;
+	opacity: .05;
+}
+
+.stl-fp-ph:not(.has-img)::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: linear-gradient(120deg, rgba(232, 67, 27, .16), transparent 55%);
+}
+
+.stl-fp-ph img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.stl-fp-tag {
+	position: absolute;
+	top: 18px;
+	left: 18px;
+	z-index: 2;
+	font-weight: 700;
+	font-size: .7rem;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	color: #fff;
+	background: var(--stl-fp-accent);
+	padding: 7px 12px;
+	border-radius: 6px;
+}
+
+/* ---------- Body ---------- */
+.stl-fp-body {
+	padding: 42px 44px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.stl-fp-kicker {
+	font-size: .74rem;
+	letter-spacing: .2em;
+	text-transform: uppercase;
+	color: var(--stl-fp-accent-2);
+	font-weight: 700;
+	margin-bottom: 14px;
+}
+
+.stl-fp-title {
+	font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+	font-weight: 800;
+	line-height: 1.06;
+	margin: 0 0 16px;
+	color: var(--stl-fp-text);
+	transition: color .2s ease;
+}
+
+.stl-fp-excerpt {
+	color: var(--stl-fp-cloud);
+	opacity: .85;
+	font-size: 1rem;
+	line-height: 1.6;
+	margin: 0 0 22px;
+	max-width: 460px;
+}
+
+.stl-fp-meta {
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	font-size: .8rem;
+	color: var(--stl-fp-muted);
+	letter-spacing: .02em;
+}
+
+.stl-fp-rt {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.stl-fp-rt::before {
+	content: "\25CF";
+	color: var(--stl-fp-accent);
+	font-size: .6em;
+}
+
+.stl-fp-more {
+	margin-top: 24px;
+	align-self: flex-start;
+	display: inline-flex;
+	align-items: center;
+	gap: 9px;
+	color: var(--stl-fp-accent-2);
+	font-weight: 700;
+	font-size: .88rem;
+	letter-spacing: .03em;
+}
+
+.stl-fp-more svg {
+	transition: transform .2s ease;
+}
+
+.stl-fp:hover .stl-fp-more svg {
+	transform: translateX(4px);
+}
+
+.stl-fp-empty {
+	color: var(--stl-fp-muted);
+	font-style: italic;
+	padding: 40px 0;
+	text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+	.stl-fp {
+		grid-template-columns: 1fr !important;
+	}
+	.stl-fp--media-right .stl-fp-ph {
+		order: 0;
+	}
+	.stl-fp-ph {
+		min-height: 240px;
+	}
+	.stl-fp-body {
+		padding: 30px 26px;
+	}
+}

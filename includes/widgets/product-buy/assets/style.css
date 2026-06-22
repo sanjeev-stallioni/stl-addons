@@ -1,0 +1,96 @@
+/* Stl Addons — Product Buy frontend styles.
+ *
+ * Reproduces the Hyun Engines single-product buy row (quantity stepper + add to
+ * cart). Visual baselines live here; Elementor controls override them at higher
+ * specificity.
+ */
+
+.stl-buy-section {
+	--stl-buy-accent: #e8431b;
+	--stl-buy-accent-2: #ff6a3d;
+	--stl-buy-ink: #0e0f11;
+}
+.woocommerce div.product form.cart.stl-buy {
+	margin: 0;
+}
+.woocommerce div.product form.cart.stl-buy::before,
+.woocommerce div.product form.cart.stl-buy::after {
+	display: none;
+}
+.stl-buy {
+	display: flex;
+	gap: 12px;
+	align-items: stretch;
+	flex-wrap: wrap;
+	margin: 0;
+}
+
+/* ---------- Quantity stepper ---------- */
+.stl-buy-qty {
+	display: flex;
+	align-items: center;
+	border: 1.5px solid #d8d2c6;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #fff;
+}
+
+.stl-buy .stl-buy-qty button {
+	width: 42px;
+	height: 48px;
+	border: none;
+	background: none;
+	font-size: 1.2rem;
+	line-height: 1;
+	cursor: pointer;
+	color: var(--stl-buy-ink);
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.stl-buy-qty .stl-buy-input {
+	width: 46px;
+	height: 48px;
+	border: none;
+	text-align: center;
+	font-weight: 700;
+	font-size: 1rem;
+	background: none;
+	-moz-appearance: textfield;
+	padding: 0;
+}
+
+.stl-buy-input::-webkit-outer-spin-button,
+.stl-buy-input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* ---------- Add to cart button ---------- */
+.stl-buy .stl-buy-add {
+	flex: 1;
+	min-width: 180px;
+	font-weight: 700;
+	font-size: 0.85rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	padding: 14px 22px;
+	border-radius: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 9px;
+	cursor: pointer;
+	border: none;
+	text-decoration: none;
+	background: var(--stl-buy-accent);
+	color: #fff;
+	box-shadow: 0 8px 24px -8px rgba(232, 67, 27, 0.7);
+	transition: 0.2s ease;
+}
+
+.stl-buy-add:hover {
+	background: var(--stl-buy-accent-2);
+	color: #fff;
+	transform: translateY(-2px);
+}

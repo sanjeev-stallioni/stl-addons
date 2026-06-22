@@ -1,0 +1,247 @@
+/* Stl Addons — Post Archive frontend styles.
+ *
+ * Rebuilds the Hyun Engines blog "pcard" grid: light paper cards with a dark
+ * gradient image placeholder, a category tag badge, kicker, title, excerpt and
+ * a footer carrying date · reading-time meta + a Read link, followed by
+ * numbered pagination. Visual baselines live here; Elementor controls override
+ * them at higher specificity.
+ */
+
+.stl-pa-section {
+	--stl-pa-ink: #0e0f11;
+	--stl-pa-graphite: #16191d;
+	--stl-pa-steel: #23272e;
+	--stl-pa-line: #2e333b;
+	--stl-pa-paper: #f4f1eb;
+	--stl-pa-paper-2: #eae5db;
+	--stl-pa-fog: #9aa1ab;
+	--stl-pa-cloud: #e9e7e2;
+	--stl-pa-accent: #e8431b;
+	--stl-pa-accent-2: #ff6a3d;
+}
+
+/* ---------- Section header ---------- */
+.stl-pa-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-bottom: 30px;
+}
+
+.stl-pa-head-title {
+	font-family: "Archivo Expanded", "Archivo", sans-serif;
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--stl-pa-ink);
+	margin: 0;
+}
+
+.stl-pa-count {
+	font-size: 0.84rem;
+	color: #6b7280;
+}
+
+/* ---------- Grid ---------- */
+.stl-pa-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 26px;
+}
+
+/* ---------- Card ---------- */
+.stl-pa-card {
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border: 1px solid var(--stl-pa-paper-2);
+	border-radius: 16px;
+	overflow: hidden;
+	color: inherit;
+	text-decoration: none;
+	transition: transform 0.26s ease, box-shadow 0.26s ease, border-color 0.26s ease;
+}
+
+.stl-pa-card:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 26px 50px -28px rgba(0, 0, 0, 0.4);
+	border-color: #ddd4c4;
+}
+
+/* ---------- Image / placeholder ---------- */
+.stl-pa-ph {
+	position: relative;
+	overflow: hidden;
+	height: 210px;
+	background: linear-gradient(150deg, var(--stl-pa-steel), var(--stl-pa-ink));
+}
+
+.stl-pa-ph img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.4s ease;
+}
+
+/* Decorative gear + accent wash only when there is no featured image. */
+.stl-pa-ph.is-empty::before {
+	content: "\2699";
+	position: absolute;
+	right: -18px;
+	bottom: -40px;
+	font-size: 14rem;
+	line-height: 1;
+	color: #fff;
+	opacity: 0.05;
+}
+
+.stl-pa-ph.is-empty::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: linear-gradient(120deg, rgba(232, 67, 27, 0.16), transparent 55%);
+}
+
+/* ---------- Tag badge ---------- */
+.stl-pa-tag {
+	position: absolute;
+	top: 18px;
+	left: 18px;
+	z-index: 2;
+	font-family: "Archivo", sans-serif;
+	font-weight: 700;
+	font-size: 0.7rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: #fff;
+	background: var(--stl-pa-accent);
+	padding: 7px 12px;
+	border-radius: 6px;
+}
+
+/* ---------- Body ---------- */
+.stl-pa-body {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	padding: 26px 28px 28px;
+}
+
+.stl-pa-kicker {
+	font-size: 0.72rem;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--stl-pa-accent);
+	font-weight: 700;
+	margin-bottom: 12px;
+}
+
+.stl-pa-title {
+	font-family: "Archivo Expanded", "Archivo", sans-serif;
+	font-size: 1.32rem;
+	font-weight: 700;
+	line-height: 1.2;
+	color: var(--stl-pa-ink);
+	margin: 0 0 12px;
+	transition: color 0.2s ease;
+}
+
+.stl-pa-excerpt {
+	flex: 1;
+	color: #525964;
+	font-size: 0.95rem;
+	margin: 0 0 20px;
+}
+
+/* ---------- Footer ---------- */
+.stl-pa-foot {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 14px;
+	margin-top: auto;
+	padding-top: 16px;
+	border-top: 1px solid var(--stl-pa-paper-2);
+}
+
+.stl-pa-meta {
+	font-size: 0.8rem;
+	letter-spacing: 0.02em;
+	color: #8a8f98;
+}
+
+.stl-pa-more {
+	display: inline-flex;
+	align-items: center;
+	gap: 9px;
+	color: var(--stl-pa-accent);
+	font-weight: 700;
+	font-size: 0.88rem;
+	letter-spacing: 0.03em;
+	white-space: nowrap;
+}
+
+.stl-pa-more svg {
+	transition: transform 0.2s ease;
+}
+
+.stl-pa-card:hover .stl-pa-more svg {
+	transform: translateX(4px);
+}
+
+.stl-pa-empty {
+	color: var(--stl-pa-fog);
+}
+
+/* ---------- Pagination ---------- */
+.stl-pa-pagination {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 40px;
+}
+
+.stl-pa-pagination .page-numbers {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 42px;
+	height: 42px;
+	padding: 0 14px;
+	border: 1px solid var(--stl-pa-paper-2);
+	border-radius: 10px;
+	background: #fff;
+	color: var(--stl-pa-ink);
+	font-weight: 700;
+	font-size: 0.9rem;
+	text-decoration: none;
+	transition: 0.2s ease;
+}
+
+.stl-pa-pagination a.page-numbers:hover {
+	border-color: var(--stl-pa-accent);
+	color: var(--stl-pa-accent);
+}
+
+.stl-pa-pagination .page-numbers.current {
+	background: var(--stl-pa-accent);
+	border-color: var(--stl-pa-accent);
+	color: #fff;
+}
+
+.stl-pa-pagination .page-numbers.dots {
+	min-width: auto;
+	border: none;
+	background: none;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 680px) {
+	.stl-pa-grid {
+		grid-template-columns: 1fr;
+	}
+}
