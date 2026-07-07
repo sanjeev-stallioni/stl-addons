@@ -29,6 +29,13 @@ use Elementor\Controls_Manager;
 
 class STL_Widget_Product_Buy extends Widget_Base {
 
+	/**
+	 * Hide this widget from the Elementor panel when WooCommerce is inactive.
+	 */
+	public static function is_available() {
+		return class_exists( 'WooCommerce' );
+	}
+
 	public function get_name()           { return 'stl_product_buy'; }
 	public function get_title()          { return __( 'Product Buy (Add to Cart)', 'stl-addons' ); }
 	public function get_icon()           { return 'eicon-product-add-to-cart'; }

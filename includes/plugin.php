@@ -124,9 +124,18 @@ final class STL_Addons_Plugin {
 			require_once $file;
 
 			$class = self::class_name_for( $slug );
-			if ( class_exists( $class ) && is_subclass_of( $class, '\Elementor\Widget_Base' ) ) {
-				$widgets_manager->register( new $class() );
+			if ( ! class_exists( $class ) || ! is_subclass_of( $class, '\Elementor\Widget_Base' ) ) {
+				continue;
 			}
+
+			// Optional per-widget availability gate. A widget may declare
+			// `public static function is_available()` returning false to hide
+			// itself when a dependency is missing (e.g. WooCommerce inactive).
+			if ( method_exists( $class, 'is_available' ) && ! $class::is_available() ) {
+				continue;
+			}
+
+			$widgets_manager->register( new $class() );
 		}
 	}
 

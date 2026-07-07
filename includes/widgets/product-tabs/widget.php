@@ -31,6 +31,13 @@ use Elementor\Group_Control_Typography;
 
 class STL_Widget_Product_Tabs extends Widget_Base {
 
+	/**
+	 * Hide this widget from the Elementor panel when WooCommerce is inactive.
+	 */
+	public static function is_available() {
+		return class_exists( 'WooCommerce' );
+	}
+
 	public function get_name()           { return 'stl_product_tabs'; }
 	public function get_title()          { return __( 'Product Tabs', 'stl-addons' ); }
 	public function get_icon()           { return 'eicon-product-tabs'; }

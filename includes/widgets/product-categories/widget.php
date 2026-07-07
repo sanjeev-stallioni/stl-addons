@@ -28,6 +28,13 @@ class STL_Widget_Product_Categories extends Widget_Base {
 
 	const ALLOWED_HEADING_TAGS = array( 'h2', 'h3', 'h4', 'h5', 'h6' );
 
+	/**
+	 * Hide this widget from the Elementor panel when WooCommerce is inactive.
+	 */
+	public static function is_available() {
+		return class_exists( 'WooCommerce' );
+	}
+
 	public function get_name()          { return 'stl_product_categories'; }
 	public function get_title()         { return __( 'Product Categories', 'stl-addons' ); }
 	public function get_icon()          { return 'eicon-product-categories'; }

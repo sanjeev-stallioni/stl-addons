@@ -104,6 +104,25 @@ If a sensible visual baseline is genuinely needed without any control input, put
 
 ---
 
+## Availability gate (optional dependencies)
+
+A widget that only makes sense when another plugin is active declares a static `is_available()`:
+
+```php
+class STL_Widget_Product_Price extends \Elementor\Widget_Base {
+
+    /** Hide this widget from the Elementor panel when WooCommerce is inactive. */
+    public static function is_available() {
+        return class_exists( 'WooCommerce' );
+    }
+    // …
+}
+```
+
+`STL_Addons_Plugin::register_widgets()` calls it (when defined) and **skips registration** if it returns `false`, so the widget never appears in the Elementor panel — editor or front end — while the dependency is missing. The method is optional: widgets without it always register. All WooCommerce widgets ship this gate keyed on `class_exists( 'WooCommerce' )`. Keep the render-time `class_exists( 'WooCommerce' )` guard too — it's the safety net for a page saved while Woo was active and later deactivated.
+
+---
+
 ## i18n
 
 Text domain is `'stl-addons'` for every `__()` / `esc_html__()` call. No exceptions.

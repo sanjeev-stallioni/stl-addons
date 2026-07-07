@@ -22,6 +22,8 @@ A growing collection of Elementor widgets by [Stallioni](https://stallioni.com) 
 
 ### WooCommerce widgets
 
+These widgets **hide themselves automatically when WooCommerce is inactive** — they never appear in the Elementor panel (editor or front end) without WooCommerce, and the admin **Widgets** page marks them as *Requires WooCommerce* with a lock instead of a toggle.
+
 | Widget | Description |
 |---|---|
 | **Archive Products** | Responsive WooCommerce product grid reproducing a shop card — image + sale badge, title, now/was price, shipping note, feature list, and an **AJAX add-to-cart** + view button. Can **follow the current archive query** (drop it in a Theme Builder / shop archive) or run its **own query** on any Elementor page, with optional pagination. Selectable heading level and full style controls. Self-contained, scoped `.stl-ap-*` (depends on the `wc-add-to-cart` script). |
@@ -67,7 +69,7 @@ Once activated, all widgets appear in Elementor's widget panel under the **Stl A
 The plugin adds a top-level **Stl Addons** menu in WP Admin with three independent pages:
 
 - **Dashboard** — welcome, widget summary, quick links, and the Stallioni brand card.
-- **Widgets** — toggle each widget on or off. Disabled widgets are hidden from the Elementor panel sitewide (front-end and editor). Toggles save instantly via AJAX.
+- **Widgets** — toggle each widget on or off. Disabled widgets are hidden from the Elementor panel sitewide (front-end and editor). Toggles save instantly via AJAX. Widgets whose dependency is missing (e.g. WooCommerce widgets while WooCommerce is inactive) are shown as *Requires WooCommerce* with a lock in place of the toggle, and a banner links out to install it.
 - **Get Help** — a getting-started checklist, a "How styles & scripts load" explainer (inline-CSS behavior + the opt-out filter), and a developer note for adding new widgets.
 
 Each page is a separate WP admin route (`admin.php?page=stl-addons`, `…-widgets`, `…-help`) — no shared tab dispatcher, so the page you're on only loads its own callback.
@@ -75,7 +77,7 @@ Each page is a separate WP admin route (`admin.php?page=stl-addons`, `…-widget
 Storage:
 
 - Disabled widgets are persisted in the WP option `stl_disabled_widgets` (array of slugs).
-- The widget registration loop in `STL_Addons_Plugin::register_widgets()` skips any slug present in that list.
+- The widget registration loop in `STL_Addons_Plugin::register_widgets()` skips any slug present in that list, and also skips any widget whose optional static `is_available()` returns `false` (used by the WooCommerce widgets to require an active WooCommerce install).
 - All toggle requests run through `wp_ajax_stl_toggle_widget` with a nonce + `manage_options` capability check.
 
 Theming & icons:
@@ -255,6 +257,13 @@ PHP constants available throughout: `STL_VERSION`, `STL_FILE`, `STL_DIR`, `STL_U
 ---
 
 ## Changelog
+
+### 1.2.0
+
+**Added**
+
+- **Availability gate** — a widget may declare a static `is_available()`; `STL_Addons_Plugin::register_widgets()` skips it when that returns `false`, so the widget never registers while a dependency is missing. All five WooCommerce widgets adopt it (`class_exists( 'WooCommerce' )`), so they no longer appear in the Elementor panel when WooCommerce is inactive.
+- **Widgets page dependency state** — unavailable widgets render dimmed with a *Requires WooCommerce* label and a lock in place of the toggle, plus a banner (with an install link) noting how many are hidden and why.
 
 ### 1.1.0
 

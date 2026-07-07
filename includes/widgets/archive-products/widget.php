@@ -32,6 +32,13 @@ class STL_Widget_Archive_Products extends Widget_Base {
 
 	const ALLOWED_HEADING_TAGS = array( 'h2', 'h3', 'h4', 'h5', 'h6' );
 
+	/**
+	 * Hide this widget from the Elementor panel when WooCommerce is inactive.
+	 */
+	public static function is_available() {
+		return class_exists( 'WooCommerce' );
+	}
+
 	public function get_name()           { return 'stl_archive_products'; }
 	public function get_title()          { return __( 'Archive Products', 'stl-addons' ); }
 	public function get_icon()           { return 'eicon-products'; }

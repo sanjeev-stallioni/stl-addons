@@ -212,14 +212,42 @@ final class STL_Addons_Admin {
 	}
 
 	private static function render_tab_widgets() {
-		$widgets  = self::discovered_widgets();
-		$disabled = self::disabled_widgets();
+		$widgets     = self::discovered_widgets();
+		$disabled    = self::disabled_widgets();
+		$unavailable = 0;
+		foreach ( array_keys( $widgets ) as $slug ) {
+			if ( ! self::widget_is_available( $slug ) ) {
+				$unavailable++;
+			}
+		}
 		?>
 		<div class="stl-card">
 			<div class="stl-card-head">
 				<h3><?php esc_html_e( 'Manage Widgets', 'stl-addons' ); ?></h3>
 				<p class="stl-card-sub"><?php esc_html_e( 'Toggle individual widgets on or off. Disabled widgets are hidden from the Elementor panel sitewide.', 'stl-addons' ); ?></p>
 			</div>
+			<?php if ( $unavailable > 0 ) : ?>
+				<div class="stl-admin-notice">
+					<span class="stl-admin-notice-icon" aria-hidden="true">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+					</span>
+					<span>
+						<?php
+						echo esc_html( sprintf(
+							/* translators: %d: number of widgets that need WooCommerce */
+							_n(
+								'%d widget needs WooCommerce, which is currently inactive — it stays hidden from Elementor until WooCommerce is activated.',
+								'%d widgets need WooCommerce, which is currently inactive — they stay hidden from Elementor until WooCommerce is activated.',
+								$unavailable,
+								'stl-addons'
+							),
+							$unavailable
+						) );
+						?>
+						<a href="<?php echo esc_url( admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' ) ); ?>"><?php esc_html_e( 'Get WooCommerce', 'stl-addons' ); ?> ↗</a>
+					</span>
+				</div>
+			<?php endif; ?>
 			<?php self::render_widget_grid( $widgets, $disabled ); ?>
 			<?php if ( empty( $widgets ) ) : ?>
 				<p class="stl-empty"><?php esc_html_e( 'No widgets discovered. Drop a widget folder under includes/widgets/ to get started.', 'stl-addons' ); ?></p>
@@ -293,22 +321,64 @@ includes/widgets/&lt;slug&gt;/assets/style.css</pre>
 		?>
 		<div class="stl-widget-grid">
 			<?php foreach ( $widgets as $slug => $title ) :
-				$is_on = ! in_array( $slug, $disabled, true );
+				$is_on     = ! in_array( $slug, $disabled, true );
+				$available = self::widget_is_available( $slug );
+				$req_label = apply_filters( 'stl_addons_widget_requirement_label', __( 'Requires WooCommerce', 'stl-addons' ), $slug );
+				$tile_cls  = 'stl-widget-tile' . ( $available ? '' : ' is-unavailable' );
 				?>
-				<div class="stl-widget-tile">
+				<div class="<?php echo esc_attr( $tile_cls ); ?>">
 					<div class="stl-widget-tile-icon"><?php self::render_widget_icon( $slug, $title ); ?></div>
 					<div class="stl-widget-tile-body">
 						<strong><?php echo esc_html( $title ); ?></strong>
-						<span class="stl-widget-tile-slug"><?php echo esc_html( $slug ); ?></span>
+						<?php if ( $available ) : ?>
+							<span class="stl-widget-tile-slug"><?php echo esc_html( $slug ); ?></span>
+						<?php else : ?>
+							<span class="stl-widget-tile-req">
+								<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+								<?php echo esc_html( $req_label ); ?>
+							</span>
+						<?php endif; ?>
 					</div>
-					<label class="stl-switch">
-						<input type="checkbox" data-slug="<?php echo esc_attr( $slug ); ?>" <?php checked( $is_on ); ?> />
-						<span class="stl-switch-track"></span>
-					</label>
+					<?php if ( $available ) : ?>
+						<label class="stl-switch">
+							<input type="checkbox" data-slug="<?php echo esc_attr( $slug ); ?>" <?php checked( $is_on ); ?> />
+							<span class="stl-switch-track"></span>
+						</label>
+					<?php else : ?>
+						<span class="stl-widget-lock" title="<?php echo esc_attr( $req_label ); ?>" aria-label="<?php echo esc_attr( $req_label ); ?>">
+							<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+						</span>
+					<?php endif; ?>
 				</div>
 			<?php endforeach; ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Whether a widget's optional `is_available()` gate passes (mirrors the
+	 * loader). WooCommerce widgets return false while WooCommerce is inactive,
+	 * so the dashboard can mark them as unavailable. Widgets without the method
+	 * are always available.
+	 */
+	private static function widget_is_available( $slug ) {
+		if ( ! preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
+			return true;
+		}
+
+		$file = STL_DIR . 'includes/widgets/' . $slug . '/widget.php';
+		if ( ! is_readable( $file ) ) {
+			return true;
+		}
+
+		require_once $file;
+
+		$class = 'STL_Widget_' . str_replace( ' ', '_', ucwords( str_replace( '-', ' ', $slug ) ) );
+		if ( method_exists( $class, 'is_available' ) ) {
+			return (bool) call_user_func( array( $class, 'is_available' ) );
+		}
+
+		return true;
 	}
 
 	/**

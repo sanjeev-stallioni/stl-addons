@@ -319,6 +319,96 @@
 	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* ---------- Unavailable widget (dependency inactive) ---------- */
+
+.stl-widget-tile.is-unavailable {
+	background: var(--stl-bg);
+	border-style: dashed;
+}
+
+.stl-widget-tile.is-unavailable:hover {
+	box-shadow: none;
+	border-color: var(--stl-border-strong);
+}
+
+.stl-widget-tile.is-unavailable .stl-widget-tile-icon {
+	background: #eef1f6;
+	color: var(--stl-muted);
+	opacity: 0.85;
+}
+
+.stl-widget-tile-req {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-top: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.2;
+	color: #7f54b3; /* WooCommerce purple */
+	white-space: nowrap;
+}
+
+.stl-widget-tile-req svg {
+	flex: 0 0 auto;
+}
+
+.stl-widget-lock {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	flex: 0 0 30px;
+	border-radius: 8px;
+	background: #f1eafa;
+	color: #7f54b3; /* WooCommerce purple */
+}
+
+.stl-widget-lock svg {
+	display: block;
+}
+
+/* ---------- Inline notice ---------- */
+
+.stl-admin-notice {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin-bottom: 16px;
+	padding: 12px 14px;
+	border: 1px solid #fde3c4;
+	border-left: 3px solid var(--stl-orange);
+	border-radius: 10px;
+	background: var(--stl-orange-soft);
+	color: var(--stl-navy);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.stl-admin-notice-icon {
+	color: var(--stl-orange);
+	flex: 0 0 auto;
+	margin-top: 1px;
+}
+
+.stl-admin-notice-icon svg {
+	width: 18px;
+	height: 18px;
+	display: block;
+}
+
+.stl-admin-notice a {
+	color: var(--stl-orange);
+	font-weight: 600;
+	white-space: nowrap;
+	text-decoration: none;
+}
+
+.stl-admin-notice a:hover {
+	text-decoration: underline;
+}
+
 /* ---------- Toggle ---------- */
 
 .stl-switch {
